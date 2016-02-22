@@ -44,14 +44,13 @@ public class ItemDummy extends WMItem
 		{
 			if (movingobjectposition.typeOfHit == MovingObjectType.BLOCK)
 			{
-				int i = movingobjectposition.getBlockPos().getX();
-				int j = movingobjectposition.getBlockPos().getY();
-				int k = movingobjectposition.getBlockPos().getZ();
-				if (world.getBlockState(new BlockPos(i, j, k)).getBlock() == Blocks.snow)
+				BlockPos pos = movingobjectposition.getBlockPos();
+				int i = pos.getY();
+				if (world.getBlockState(pos).getBlock() == Blocks.snow)
 				{
-					j--;
+					i--;
 				}
-				EntityDummy entitydummy = new EntityDummy(world, i + 0.5F, j + 1.0F, k + 0.5F);
+				EntityDummy entitydummy = new EntityDummy(world, pos.getX() + 0.5F, i + 1.0F, pos.getZ() + 0.5F);
 				entitydummy.rotationYaw = entityplayer.rotationYaw;
 				world.spawnEntityInWorld(entitydummy);
 				if (!entityplayer.capabilities.isCreativeMode || !world.isRemote)

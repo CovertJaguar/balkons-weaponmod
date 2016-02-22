@@ -3,6 +3,7 @@ package ckathode.weaponmod.entity.projectile;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -19,11 +20,11 @@ public class EntityKnife extends EntityMaterialProjectile
 		super(world);
 	}
 	
-	public EntityKnife(World world, double d, double d1, double d2)
+	/*public EntityKnife(World world, double d, double d1, double d2)
 	{
-		this(world);
+		this(world);=
 		setPosition(d, d1, d2);
-	}
+	}*/
 	
 	public EntityKnife(World world, EntityLivingBase entityliving, ItemStack itemstack)
 	{

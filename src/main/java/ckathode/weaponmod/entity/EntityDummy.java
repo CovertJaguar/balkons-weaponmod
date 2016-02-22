@@ -51,14 +51,20 @@ public class EntityDummy extends Entity
 		dataWatcher.addObject(18, Byte.valueOf((byte) 1));
 		dataWatcher.addObject(19, Integer.valueOf(0));
 	}
+
+	@Override
+	public double getYOffset()
+	{
+		return 0.41F;
+	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-		return entity.getBoundingBox();
+		return entity.getEntityBoundingBox();
 	}
 	
-	@Override
+	//@Override
 	public AxisAlignedBB getBoundingBox()
 	{
 		return getEntityBoundingBox();
@@ -180,7 +186,7 @@ public class EntityDummy extends Entity
 		moveEntity(0D, motionY, 0D);
 		
 		@SuppressWarnings("unchecked")
-		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().expand(0.2D, 0.0D, 0.2D));
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 		if (list != null && list.size() > 0)
 		{
 			for (int j1 = 0; j1 < list.size(); j1++)
@@ -195,14 +201,20 @@ public class EntityDummy extends Entity
 	}
 	
 	@Override
-	public void fall(float distance, float damageMultiplier)
+	public void fall(float f, float f1)
 	{
-		super.fall(distance, damageMultiplier);
+		super.fall(f, f1);
 		if (!onGround) return;
-		int i = MathHelper.floor_float(distance);
+		int i = MathHelper.floor_float(f);
 		attackEntityFrom(DamageSource.fall, i);
 	}
-
+	
+	/*@Override
+	public float getShadowSize()
+	{
+		return 1.0F;
+	}*/
+	
 	public void dropAsItem(boolean destroyed)
 	{
 		if (worldObj.isRemote) return;

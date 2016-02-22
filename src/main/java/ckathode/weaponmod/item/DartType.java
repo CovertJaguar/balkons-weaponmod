@@ -1,6 +1,5 @@
 package ckathode.weaponmod.item;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -36,8 +35,6 @@ public class DartType
 	public Object		craftItem;
 	public PotionEffect	potionEffect;
 	
-	public ModelResourceLocation itemModel;
-	
 	public DartType(int id, String typename, Object craftitem, PotionEffect potioneffect)
 	{
 		dartTypes[id] = this;
@@ -45,8 +42,6 @@ public class DartType
 		typeName = typename;
 		craftItem = craftitem;
 		potionEffect = potioneffect;
-		
-		itemModel = null;
 	}
 	
 }

@@ -1,10 +1,10 @@
 package ckathode.weaponmod;
 
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import ckathode.weaponmod.network.MsgCannonFire;
 import ckathode.weaponmod.network.MsgExplosion;
 import ckathode.weaponmod.network.WMMessagePipeline;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class WMCommonProxy
 {
@@ -15,15 +15,24 @@ public class WMCommonProxy
 	
 	public void registerPackets(WMMessagePipeline pipeline)
 	{
-		pipeline.registerMessage(MsgCannonFire.Handler.class, MsgCannonFire.class, 0, Side.SERVER);
-		pipeline.registerMessage(MsgExplosion.Handler.class, MsgExplosion.class, 1, Side.CLIENT);
+		pipeline.registerPacket(MsgCannonFire.class);
+		pipeline.registerPacket(MsgExplosion.class);
 	}
 	
-	public void registerIcons()
+	public void registerIcons(WeaponModConfig config)
 	{
 	}
 	
 	public void registerRenderers(WeaponModConfig config)
 	{
+	}
+
+	public void setTextureName(Item item, int damage, String texturename)
+	{
+	}
+
+	public void setTextureName(Item item, String texturename)
+	{
+		setTextureName(item, 0, texturename);
 	}
 }

@@ -11,6 +11,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
 import ckathode.weaponmod.ReloadHelper;
@@ -338,7 +339,7 @@ public abstract class RangedComponent extends AbstractWeaponComponent
 		{
 			if (ammoItem == null && ammoItemTag != null)
 			{
-				ammoItem = (Item) Item.itemRegistry.getObject(ammoItemTag);
+				ammoItem = Item.itemRegistry.getObject(new ResourceLocation(ammoItemTag));
 				BalkonsWeaponMod.modLog.debug("Found item " + ammoItem + " for " + ammoItemTag + " @" + this);
 				ammoItemTag = null;
 			}

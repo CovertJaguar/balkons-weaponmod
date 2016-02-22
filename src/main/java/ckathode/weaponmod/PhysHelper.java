@@ -5,7 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import ckathode.weaponmod.network.MsgExplosion;
@@ -20,7 +19,7 @@ public abstract class PhysHelper
 	
 	public static AdvancedExplosion createStandardExplosion(World world, Entity entity, double d, double d1, double d2, float size)
 	{
-		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, true, true);
+		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, false, false);
 		explosion.doEntityExplosion();
 		explosion.doBlockExplosion();
 		explosion.doParticleExplosion(true, true);
@@ -30,7 +29,7 @@ public abstract class PhysHelper
 	
 	public static AdvancedExplosion createAdvancedExplosion(World world, Entity entity, double d, double d1, double d2, float size, boolean destroyBlocks, boolean spawnSmallParticles, boolean spawnBigParticles)
 	{
-		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, true, true);
+		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, false, false);
 		explosion.doEntityExplosion();
 		if (destroyBlocks)
 		{
@@ -43,7 +42,7 @@ public abstract class PhysHelper
 	
 	public static AdvancedExplosion createAdvancedExplosion(World world, Entity entity, DamageSource damagesource, double d, double d1, double d2, float size, boolean destroyBlocks, boolean spawnSmallParticles, boolean spawnBigParticles)
 	{
-		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, true, true);
+		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, false, false);
 		explosion.doEntityExplosion(damagesource);
 		if (destroyBlocks)
 		{
@@ -56,7 +55,7 @@ public abstract class PhysHelper
 	
 	public static AdvancedExplosion createAdvancedExplosion(World world, Entity entity, double d, double d1, double d2, float size, boolean destroyBlocks, boolean spawnParticles)
 	{
-		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, true, true);
+		AdvancedExplosion explosion = new AdvancedExplosion(world, entity, d, d1, d2, size, false, false);
 		explosion.doEntityExplosion();
 		if (destroyBlocks)
 		{
@@ -72,8 +71,7 @@ public abstract class PhysHelper
 		if (world instanceof WorldServer && !world.isRemote)
 		{
 			MsgExplosion msg = new MsgExplosion(explosion, smallparts, bigparts);
-			Vec3 explostion_pos = explosion.getPosition();
-			BalkonsWeaponMod.instance.messagePipeline.sendToAllAround(msg, new TargetPoint(world.provider.getDimensionId(), explostion_pos.xCoord, explostion_pos.yCoord, explostion_pos.zCoord, 64D));
+			BalkonsWeaponMod.instance.messagePipeline.sendToAllAround(msg, new TargetPoint(world.provider.getDimensionId(), explosion.getPosition().xCoord, explosion.getPosition().yCoord, explosion.getPosition().zCoord, 64D));
 		}
 	}
 	
@@ -118,7 +116,6 @@ public abstract class PhysHelper
 	
 	public static void prepareKnockbackOnEntity(EntityLivingBase attacker, EntityLivingBase entity)
 	{
-		//knockBackModifier = EnchantmentHelper.getKnockbackModifier(attacker, entity);
 		knockBackModifier = EnchantmentHelper.getKnockbackModifier(attacker);
 		if (attacker.isSprinting())
 		{

@@ -34,6 +34,7 @@ public class ItemShooter extends ItemBow implements IItemWeapon
 		super();
 		GameRegistry.registerItem(this, id, BalkonsWeaponMod.MOD_ID);
 		setUnlocalizedName(id);
+		BalkonsWeaponMod.proxy.setTextureName(this, id);
 		
 		rangedComponent = rangedcomponent;
 		meleeComponent = meleecomponent;
@@ -158,7 +159,7 @@ public class ItemShooter extends ItemBow implements IItemWeapon
 	{
 		return rangedComponent;
 	}
-
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isFull3D()

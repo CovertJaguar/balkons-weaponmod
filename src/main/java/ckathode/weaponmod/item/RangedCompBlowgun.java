@@ -111,7 +111,7 @@ public class RangedCompBlowgun extends RangedComponent
 		world.playSoundEffect(x, y, z, "random.bow", 1.0F, 1.0F / (weapon.getItemRand().nextFloat() * 0.2F + 0.5F));
 
 		float particleX = -MathHelper.sin(((yaw + 23) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
-		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) - 0.1F;
+		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) + 1.6F;
 		float particleZ = MathHelper.cos(((yaw + 23) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
 
 		world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + particleX, y + particleY, z + particleZ, 0.0D, 0.0D, 0.0D);

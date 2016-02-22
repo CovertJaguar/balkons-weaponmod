@@ -3,7 +3,9 @@ package ckathode.weaponmod.entity.projectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
@@ -25,11 +27,11 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		super(world);
 	}
 	
-	public EntityBoomerang(World world, double x, double y, double z)
+	/*public EntityBoomerang(World world, double x, double y, double z)
 	{
 		this(world);
 		setPosition(x, y, z);
-	}
+	}*/
 	
 	public EntityBoomerang(World world, EntityLivingBase entityliving, ItemStack itemstack, float f)
 	{
@@ -177,7 +179,11 @@ public class EntityBoomerang extends EntityMaterialProjectile
 	@Override
 	public void onGroundHit(MovingObjectPosition mop)
 	{
-		inTile = worldObj.getBlockState(mop.getBlockPos()).getBlock();
+		BlockPos blockpos = mop.getBlockPos();
+		xTile = blockpos.getX();
+		yTile = blockpos.getY();
+		zTile = blockpos.getZ();
+		inTile = worldObj.getBlockState(blockpos).getBlock();
 		motionX = (float) (mop.hitVec.xCoord - posX);
 		motionY = (float) (mop.hitVec.yCoord - posY);
 		motionZ = (float) (mop.hitVec.zCoord - posZ);
@@ -202,7 +208,7 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		
 		if (inTile != null)
 		{
-			inTile.onEntityCollidedWithBlock(worldObj, mop.getBlockPos(), this);
+			inTile.onEntityCollidedWithBlock(worldObj, blockpos, this);
 		}
 	}
 	

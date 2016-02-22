@@ -49,16 +49,15 @@ public class ItemCannon extends WMItem
 		{
 			if (movingobjectposition.typeOfHit == MovingObjectType.BLOCK)
 			{
-				int i = movingobjectposition.getBlockPos().getX();
-				int j = movingobjectposition.getBlockPos().getY();
-				int k = movingobjectposition.getBlockPos().getZ();
+				BlockPos pos = movingobjectposition.getBlockPos();
+				int i = pos.getY();
 				if (!world.isRemote)
 				{
-					if (world.getBlockState(new BlockPos(i, j, k)).getBlock() == Blocks.snow)
+					if (world.getBlockState(pos).getBlock() == Blocks.snow)
 					{
-						j--;
+						i--;
 					}
-					world.spawnEntityInWorld(new EntityCannon(world, i + 0.5F, j + 1.0F, k + 0.5F));
+					world.spawnEntityInWorld(new EntityCannon(world, pos.getX() + 0.5F, i + 1.0F, pos.getZ() + 0.5F));
 				}
 				if (!entityplayer.capabilities.isCreativeMode || !world.isRemote)
 				{

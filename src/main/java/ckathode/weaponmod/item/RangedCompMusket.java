@@ -59,7 +59,7 @@ public class RangedCompMusket extends RangedComponent
 		itemstack.damageItem(deltadamage, entityplayer);
 		if (flag)
 		{
-			int bayonetdamage = !itemstack.hasTagCompound() ? 0 : itemstack.getTagCompound().getShort("bayonetDamage");
+			int bayonetdamage = itemstack.getTagCompound() == null ? 0 : itemstack.getTagCompound().getShort("bayonetDamage");
 			entityplayer.inventory.addItemStackToInventory(new ItemStack(musket.bayonetItem, 1, bayonetdamage));
 		} else
 		{
@@ -85,7 +85,7 @@ public class RangedCompMusket extends RangedComponent
 		world.playSoundEffect(x, y, z, "ambient.weather.thunder", 3F, 1F / (weapon.getItemRand().nextFloat() * 0.4F + 0.4F));
 
 		float particleX = -MathHelper.sin(((yaw + 23) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
-		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) - 0.1F;
+		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) + 1.6F;
 		float particleZ = MathHelper.cos(((yaw + 23) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
 
 		for (int i = 0; i < 3; i++)

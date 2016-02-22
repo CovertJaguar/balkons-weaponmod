@@ -1,6 +1,5 @@
 package ckathode.weaponmod.item;
 
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -47,7 +46,7 @@ public class ItemMusket extends ItemShooter
 		if (attacker instanceof EntityPlayer && !((EntityPlayer) attacker).capabilities.isCreativeMode)
 		{
 			EntityPlayer entityplayer = (EntityPlayer) attacker;
-			if (!itemstack.hasTagCompound())
+			if (itemstack.getTagCompound() == null)
 			{
 				itemstack.setTagCompound(new NBTTagCompound());
 			}

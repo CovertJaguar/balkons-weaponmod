@@ -1,8 +1,10 @@
 package ckathode.weaponmod.entity.projectile;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
@@ -99,7 +101,13 @@ public class EntityCannonBall extends EntityProjectile
 	@Override
 	public void onGroundHit(MovingObjectPosition mop)
 	{
-		inTile = worldObj.getBlockState(mop.getBlockPos()).getBlock();
+		BlockPos blockpos = mop.getBlockPos();
+		xTile = blockpos.getX();
+		yTile = blockpos.getY();
+		zTile = blockpos.getZ();
+		IBlockState blockstate = worldObj.getBlockState(blockpos);
+		inTile = blockstate.getBlock();
+		inData = blockstate.getBlock().getMetaFromState(blockstate);
 		motionX = (float) (mop.hitVec.xCoord - posX);
 		motionY = (float) (mop.hitVec.yCoord - posY);
 		motionZ = (float) (mop.hitVec.zCoord - posZ);
@@ -111,7 +119,7 @@ public class EntityCannonBall extends EntityProjectile
 		
 		if (inTile != null)
 		{
-			inTile.onEntityCollidedWithBlock(worldObj, mop.getBlockPos(), this);
+			inTile.onEntityCollidedWithBlock(worldObj, blockpos, this);
 		}
 		
 		createCrater();
@@ -140,4 +148,10 @@ public class EntityCannonBall extends EntityProjectile
 	{
 		return new ItemStack(BalkonsWeaponMod.cannonBall, 1);
 	}
+	
+	/*@Override
+	public float getShadowSize()
+	{
+		return 0.5F;
+	}*/
 }

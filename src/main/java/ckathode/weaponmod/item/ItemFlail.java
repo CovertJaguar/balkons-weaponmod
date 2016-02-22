@@ -1,26 +1,29 @@
 package ckathode.weaponmod.item;
 
+import ckathode.weaponmod.PlayerWeaponData;
+import ckathode.weaponmod.entity.projectile.EntityFlail;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import ckathode.weaponmod.PlayerWeaponData;
-import ckathode.weaponmod.entity.projectile.EntityFlail;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemFlail extends WMItem
 {
-	public ModelResourceLocation modelResourceLocation;
-	private float	flailDamage;
-	
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation	modelLocationThrown = new ModelResourceLocation("weaponmod:flail-thrown", "inventory");
+	private float					flailDamage;
+	private Item.ToolMaterial material;
+
 	public ItemFlail(String id, Item.ToolMaterial toolmaterial)
 	{
 		super(id);
 		setMaxDamage(toolmaterial.getMaxUses());
 		flailDamage = 4F + toolmaterial.getDamageVsEntity() * 1F;
+		material = toolmaterial;
 	}
 	
 	@Override
@@ -99,6 +102,7 @@ public class ItemFlail extends WMItem
 		{
 			EntityFlail entity = new EntityFlail(world, entityplayer, itemstack);
 			PlayerWeaponData.setFlailEntityId(entityplayer, entity.getEntityId());
+			EntityFlail.materials.put(entity.getEntityId(), material);
 			world.spawnEntityInWorld(entity);
 		}
 		
@@ -131,5 +135,16 @@ public class ItemFlail extends WMItem
 	public float getFlailDamage()
 	{
 		return flailDamage;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
+	{
+		if (PlayerWeaponData.isFlailThrown(player))
+		{
+			return modelLocationThrown;
+		}
+		return super.getModel(stack, player, useRemaining);
 	}
 }

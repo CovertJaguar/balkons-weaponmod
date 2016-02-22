@@ -31,6 +31,7 @@ public class ItemMelee extends ItemSword implements IItemWeapon
 		super((meleecomponent.weaponMaterial == null ? ToolMaterial.WOOD : meleecomponent.weaponMaterial));
 		GameRegistry.registerItem(this, id, BalkonsWeaponMod.MOD_ID);
 		setUnlocalizedName(id);
+		BalkonsWeaponMod.proxy.setTextureName(this, id);
 		
 		meleeComponent = meleecomponent;
 		meleecomponent.setItem(this);

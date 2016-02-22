@@ -11,14 +11,18 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
 import ckathode.weaponmod.entity.projectile.EntityCannonBall;
 
 public class EntityCannon extends EntityBoat
 {
-	public double yOffset;
 	public EntityCannon(World world)
 	{
 		super(world);
@@ -26,7 +30,6 @@ public class EntityCannon extends EntityBoat
 		rotationPitch = -20F;
 		setRotation(rotationYaw, rotationPitch);
 		setSize(1.5F, 1.0F);
-		yOffset = height / 2.0F;
 	}
 	
 	public EntityCannon(World world, double d, double d1, double d2)
@@ -51,14 +54,20 @@ public class EntityCannon extends EntityBoat
 		dataWatcher.addObject(21, Short.valueOf((short) 0));
 		dataWatcher.addObject(22, Byte.valueOf((byte) 0));
 	}
+
+	@Override
+	public double getYOffset()
+	{
+		return height / 2.0F;
+	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-		return entity.getBoundingBox();
+		return entity.getEntityBoundingBox();
 	}
 	
-	@Override
+	//@Override
 	public AxisAlignedBB getBoundingBox()
 	{
 		return getEntityBoundingBox();
@@ -199,7 +208,7 @@ public class EntityCannon extends EntityBoat
 		moveEntity(motionX, motionY, motionZ);
 		
 		@SuppressWarnings("unchecked")
-		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getBoundingBox().expand(0.2D, 0.0D, 0.2D));
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 		if (list != null && !list.isEmpty())
 		{
 			for (Entity entity : list)
@@ -227,10 +236,10 @@ public class EntityCannon extends EntityBoat
 	}
 	
 	@Override
-	public void fall(float distance, float damageMultiplier)
+	public void fall(float f, float f1)
 	{
-		super.fall(distance, damageMultiplier);
-		int i = MathHelper.floor_float(distance);
+		super.fall(f, f1);
+		int i = MathHelper.floor_float(f);
 		i *= 2;
 		attackEntityFrom(DamageSource.fall, i);
 	}
@@ -310,6 +319,12 @@ public class EntityCannon extends EntityBoat
 			riddenByEntity.setPosition(posX + d, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ + d1);
 		}
 	}
+	
+	/*@Override
+	public float getShadowSize()
+	{
+		return 1.0F;
+	}*/
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound)

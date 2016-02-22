@@ -43,7 +43,7 @@ public class MeleeCompWarhammer extends MeleeComponent
 	{
 		entityplayer.swingItem();
 		float f = getEntityDamage() / 2F;
-		WarhammerExplosion expl = new WarhammerExplosion(world, entityplayer, entityplayer.posX, entityplayer.posY - entityplayer.getEyeHeight(), entityplayer.posZ, f, true, true);
+		WarhammerExplosion expl = new WarhammerExplosion(world, entityplayer, entityplayer.posX, entityplayer.posY - entityplayer.getEyeHeight(), entityplayer.posZ, f);
 		expl.doEntityExplosion(DamageSource.causePlayerDamage(entityplayer));
 		expl.doParticleExplosion(true, false);
 		itemstack.damageItem(16, entityplayer);

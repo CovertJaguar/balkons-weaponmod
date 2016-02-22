@@ -4,7 +4,9 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,15 +32,15 @@ public abstract class ExtendedReachHelper
 				double var2 = dist;
 				mop = mc.getRenderViewEntity().rayTrace(var2, frame);
 				double calcdist = var2;
-				BlockPos pos = mc.getRenderViewEntity().getPosition();
+				Vec3 pos = mc.getRenderViewEntity().getPositionEyes(frame);
 				var2 = calcdist;
 				if (mop != null)
 				{
-					calcdist = mop.hitVec.distanceTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+					calcdist = mop.hitVec.distanceTo(pos);
 				}
 				
 				Vec3 lookvec = mc.getRenderViewEntity().getLook(frame);
-				BlockPos var8 = pos.add(new Vec3i(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2));
+				Vec3 var8 = pos.addVector(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2);
 				Entity pointedEntity = null;
 				float var9 = 1.0F;
 				@SuppressWarnings("unchecked")
@@ -50,10 +52,10 @@ public abstract class ExtendedReachHelper
 					if (entity.canBeCollidedWith())
 					{
 						float bordersize = entity.getCollisionBorderSize();
-						AxisAlignedBB aabb = entity.getBoundingBox().expand(bordersize, bordersize, bordersize);
-						MovingObjectPosition mop0 = aabb.calculateIntercept(new Vec3(pos.getX(), pos.getY(), pos.getZ()), new Vec3(var8.getX(), var8.getY(), var8.getZ()));
+						AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(bordersize, bordersize, bordersize);
+						MovingObjectPosition mop0 = aabb.calculateIntercept(pos, var8);
 						
-						if (aabb.isVecInside(new Vec3(pos.getX(), pos.getY(), pos.getZ())))
+						if (aabb.isVecInside(pos))
 						{
 							if (0.0D < d || d == 0.0D)
 							{
@@ -62,7 +64,7 @@ public abstract class ExtendedReachHelper
 							}
 						} else if (mop0 != null)
 						{
-							double d1 = new Vec3(pos.getX(), pos.getY(), pos.getZ()).distanceTo(mop0.hitVec);
+							double d1 = pos.distanceTo(mop0.hitVec);
 							
 							if (d1 < d || d == 0.0D)
 							{
