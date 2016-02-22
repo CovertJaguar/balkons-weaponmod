@@ -17,9 +17,9 @@ public class RenderCannon extends Render
 	protected ModelCannonBarrel		modelBarrel;
 	protected ModelCannonStandard	modelStandard;
 	
-	public RenderCannon(RenderManager renderManager)
+	public RenderCannon(RenderManager rendermanager)
 	{
-		super(renderManager);
+		super(rendermanager);
 		shadowSize = 1.0F;
 		modelCannon = new ModelCannon();
 		modelBarrel = new ModelCannonBarrel();
@@ -28,13 +28,12 @@ public class RenderCannon extends Render
 	
 	private void renderCannon(EntityCannon entitycannon, double d, double d1, double d2, float f, float f1)
 	{
-		d1=d1+entitycannon.yOffset;
 		GL11.glPushMatrix();
 		
 		float rot = entitycannon.prevRotationPitch + (entitycannon.rotationPitch - entitycannon.prevRotationPitch) * f1;
 		rot = Math.min(rot, 20F);
 		
-		GL11.glTranslatef((float) d, (float) d1 + 1.9F, (float) d2);
+		GL11.glTranslatef((float) d, (float) d1 + 2.4F, (float) d2);
 		GL11.glRotatef(-f, 0.0F, 1.0F, 0.0F);
 		float f3 = entitycannon.getTimeSinceHit() - f1;
 		float f4 = entitycannon.getCurrentDamage() - f1;

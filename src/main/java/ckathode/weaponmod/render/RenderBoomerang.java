@@ -1,21 +1,21 @@
 package ckathode.weaponmod.render;
 
+import ckathode.weaponmod.WeaponModResources;
+import ckathode.weaponmod.entity.projectile.EntityBoomerang;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import ckathode.weaponmod.WeaponModResources;
-import ckathode.weaponmod.entity.projectile.EntityBoomerang;
 
 public class RenderBoomerang extends Render
 {
-	public RenderBoomerang(RenderManager renderManager) {
-		super(renderManager);
+	public RenderBoomerang(RenderManager rendermanager)
+	{
+		super(rendermanager);
 	}
 
 	private void renderBoomerang(EntityBoomerang entityarrow, double d, double d1, double d2, float f, float f1)
@@ -26,7 +26,7 @@ public class RenderBoomerang extends Render
 		GL11.glRotatef(entityarrow.prevRotationPitch + (entityarrow.rotationPitch - entityarrow.prevRotationPitch) * f1, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef((entityarrow.prevRotationYaw + (entityarrow.rotationYaw - entityarrow.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
 		Tessellator tess = Tessellator.getInstance();
-		WorldRenderer worldRenderer = tess.getWorldRenderer();
+		WorldRenderer renderer = tess.getWorldRenderer();
 
 		int mat = entityarrow.getWeaponMaterialId();
 		float[] color = entityarrow.getMaterialColor();
@@ -45,73 +45,70 @@ public class RenderBoomerang extends Render
 		GL11.glTranslatef(-0.5F, 0F, -0.5F);
 		GL11.glColor3f(1F, 1F, 1F);
 		GL11.glNormal3f(0F, 1F, 0F);
-		worldRenderer.startDrawingQuads();
-		worldRenderer.setColorOpaque_F(1F, 1F, 1F);
-		worldRenderer.addVertexWithUV(0D, 0D, 1D, ft1, ft0);
-		worldRenderer.addVertexWithUV(1D, 0D, 1D, ft0, ft0);
-		worldRenderer.addVertexWithUV(1D, 0D, 0D, ft0, ft1);
-		worldRenderer.addVertexWithUV(0D, 0D, 0D, ft1, ft1);
-		
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+		renderer.pos(0D, 0D, 1D).tex(ft1, ft0).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(1D, 0D, 1D).tex(ft0, ft0).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(1D, 0D, 0D).tex(ft0, ft1).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(0D, 0D, 0D).tex(ft1, ft1).color(1F, 1F, 1F, 1F).endVertex();
+
 		if (mat != 0)
 		{
-			worldRenderer.setColorOpaque_F(color[0], color[1], color[2]);
-			worldRenderer.addVertexWithUV(0D, 0D, 1D, ft2, ft0);
-			worldRenderer.addVertexWithUV(1D, 0D, 1D, ft1, ft0);
-			worldRenderer.addVertexWithUV(1D, 0D, 0D, ft1, ft1);
-			worldRenderer.addVertexWithUV(0D, 0D, 0D, ft2, ft1);
+			renderer.pos(0D, 0D, 1D).tex(ft2, ft0).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(1D, 0D, 1D).tex(ft1, ft0).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(1D, 0D, 0D).tex(ft1, ft1).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(0D, 0D, 0D).tex(ft2, ft1).color(color[0], color[1], color[2], 1F).endVertex();
 		}
 		tess.draw();
 		GL11.glNormal3f(0F, -1F, 0F);
-		worldRenderer.startDrawingQuads();
-		worldRenderer.setColorOpaque_F(1F, 1F, 1F);
-		worldRenderer.addVertexWithUV(1D, 0D, 0D, ft0, ft1);
-		worldRenderer.addVertexWithUV(1D, 0D, 1D, ft1, ft1);
-		worldRenderer.addVertexWithUV(0D, 0D, 1D, ft1, ft0);
-		worldRenderer.addVertexWithUV(0D, 0D, 0D, ft0, ft0);
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		renderer.pos(1D, 0D, 0D).tex(ft0, ft1).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(1D, 0D, 1D).tex(ft1, ft1).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(0D, 0D, 1D).tex(ft1, ft0).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(0D, 0D, 0D).tex(ft0, ft0).color(1F, 1F, 1F, 1F).endVertex();
 		
 		if (mat != 0)
 		{
-			worldRenderer.setColorOpaque_F(color[0], color[1], color[2]);
-			worldRenderer.addVertexWithUV(1D, 0D, 0D, ft1, ft1);
-			worldRenderer.addVertexWithUV(1D, 0D, 1D, ft2, ft1);
-			worldRenderer.addVertexWithUV(0D, 0D, 1D, ft2, ft0);
-			worldRenderer.addVertexWithUV(0D, 0D, 0D, ft1, ft0);
+			renderer.pos(1D, 0D, 0D).tex(ft1, ft1).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(1D, 0D, 1D).tex(ft2, ft1).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(0D, 0D, 1D).tex(ft2, ft0).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(0D, 0D, 0D).tex(ft1, ft0).color(color[0], color[1], color[2], 1F).endVertex();
 		}
 		tess.draw();
 		
 		float sqrt2 = (float) Math.sqrt(2);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glNormal3f(-sqrt2, 0F, sqrt2);
-		worldRenderer.startDrawingQuads();
-		worldRenderer.setColorOpaque_F(1F, 1F, 1F);
-		worldRenderer.addVertexWithUV(f2, -fh, f4, ft1, ft3);
-		worldRenderer.addVertexWithUV(f2, fh, f4, ft1, ft4);
-		worldRenderer.addVertexWithUV(f3, fh, f4, ft0, ft4);
-		worldRenderer.addVertexWithUV(f3, -fh, f4, ft0, ft3);
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		renderer.pos(f2, -fh, f4).tex(ft1, ft3).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f2, fh, f4).tex(ft1, ft4).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f3, fh, f4).tex(ft0, ft4).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f3, -fh, f4).tex(ft0, ft3).color(1F, 1F, 1F, 1F).endVertex();
 		
 		if (mat != 0)
 		{
-			worldRenderer.setColorOpaque_F(color[0], color[1], color[2]);
-			worldRenderer.addVertexWithUV(f2, -fh, f4, ft2, ft3);
-			worldRenderer.addVertexWithUV(f2, fh, f4, ft2, ft4);
-			worldRenderer.addVertexWithUV(f3, fh, f4, ft1, ft4);
-			worldRenderer.addVertexWithUV(f3, -fh, f4, ft1, ft3);
+			renderer.pos(f2, -fh, f4).tex(ft2, ft3).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f2, fh, f4).tex(ft2, ft4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f3, fh, f4).tex(ft1, ft4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f3, -fh, f4).tex(ft1, ft3).color(color[0], color[1], color[2], 1F).endVertex();
 		}
-		
-		worldRenderer.setColorOpaque_F(1F, 1F, 1F);
-		worldRenderer.addVertexWithUV(f2, -fh, f4, ft1, ft3);
-		worldRenderer.addVertexWithUV(f2, fh, f4, ft1, ft4);
-		worldRenderer.addVertexWithUV(f2, fh, f2, ft0, ft4);
-		worldRenderer.addVertexWithUV(f2, -fh, f2, ft0, ft3);
-		
+
+		renderer.pos(f2, -fh, f4).tex(ft1, ft3).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f2, fh, f4).tex(ft1, ft4).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f2, fh, f2).tex(ft0, ft4).color(1F, 1F, 1F, 1F).endVertex();
+		renderer.pos(f2, -fh, f2).tex(ft0, ft3).color(1F, 1F, 1F, 1F).endVertex();
+
 		if (mat != 0)
 		{
-			worldRenderer.setColorOpaque_F(color[0], color[1], color[2]);
-			worldRenderer.addVertexWithUV(f2, -fh, f4, ft2, ft3);
-			worldRenderer.addVertexWithUV(f2, fh, f4, ft2, ft4);
-			worldRenderer.addVertexWithUV(f2, fh, f2, ft1, ft4);
-			worldRenderer.addVertexWithUV(f2, -fh, f2, ft1, ft3);
+			renderer.pos(f2, -fh, f4).tex(ft2, ft3).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f2, fh, f4).tex(ft2, ft4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f2, fh, f2).tex(ft1, ft4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(f2, -fh, f2).tex(ft1, ft3).color(color[0], color[1], color[2], 1F).endVertex();
 		}
+
 		tess.draw();
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPopMatrix();

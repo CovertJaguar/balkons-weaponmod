@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -15,8 +16,9 @@ import ckathode.weaponmod.entity.projectile.EntityKnife;
 
 public class RenderKnife extends Render
 {
-	public RenderKnife(RenderManager renderManager) {
-		super(renderManager);
+	public RenderKnife(RenderManager rendermanager)
+	{
+		super(rendermanager);
 	}
 
 	public void renderKnife(EntityKnife entityarrow, double d, double d1, double d2, float f, float f1)
@@ -28,7 +30,7 @@ public class RenderKnife extends Render
 			GL11.glRotatef((entityarrow.prevRotationYaw + (entityarrow.rotationYaw - entityarrow.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(entityarrow.prevRotationPitch + (entityarrow.rotationPitch - entityarrow.prevRotationPitch) * f1, 0.0F, 0.0F, 1.0F);
 			Tessellator tess = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tess.getWorldRenderer();
+			WorldRenderer renderer = tess.getWorldRenderer();
 			float[] color = entityarrow.getMaterialColor();
 			int i = 0;
 			float f2 = 0.0F;
@@ -53,40 +55,38 @@ public class RenderKnife extends Render
 			GL11.glScalef(f10, f10, f10);
 			GL11.glTranslatef(-4F, 0.0F, 0.0F);
 			GL11.glNormal3f(f10, 0.0F, 0.0F);
-			worldrenderer.startDrawingQuads();
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			{
-				worldrenderer.addVertexWithUV(-7D, -2D, -2D, f6, f8);
-				worldrenderer.addVertexWithUV(-7D, -2D, 2D, f7, f8);
-				worldrenderer.addVertexWithUV(-7D, 2D, 2D, f7, f9);
-				worldrenderer.addVertexWithUV(-7D, 2D, -2D, f6, f9);
+				renderer.pos(-7D, -2D, -2D).tex(f6, f8).endVertex();
+				renderer.pos(-7D, -2D, 2D).tex(f7, f8).endVertex();
+				renderer.pos(-7D, 2D, 2D).tex(f7, f9).endVertex();
+				renderer.pos(-7D, 2D, -2D).tex(f6, f9).endVertex();
 			}
 			tess.draw();
 			GL11.glNormal3f(-f10, 0.0F, 0.0F);
-			worldrenderer.startDrawingQuads();
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			{
-				worldrenderer.addVertexWithUV(-7D, 2D, -2D, f6, f8);
-				worldrenderer.addVertexWithUV(-7D, 2D, 2D, f7, f8);
-				worldrenderer.addVertexWithUV(-7D, -2D, 2D, f7, f9);
-				worldrenderer.addVertexWithUV(-7D, -2D, -2D, f6, f9);
+				renderer.pos(-7D, 2D, -2D).tex(f6, f8).endVertex();
+				renderer.pos(-7D, 2D, 2D).tex(f7, f8).endVertex();
+				renderer.pos(-7D, -2D, 2D).tex(f7, f9).endVertex();
+				renderer.pos(-7D, -2D, -2D).tex(f6, f9).endVertex();
 			}
 			tess.draw();
 			for (int j = 0; j < 4; j++)
 			{
 				GL11.glRotatef(90F, 1.0F, 0.0F, 0.0F);
 				GL11.glNormal3f(0.0F, 0.0F, f10);
-				worldrenderer.startDrawingQuads();
+				renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 				{
-					worldrenderer.setColorOpaque_F(1F, 1F, 1F);
-					worldrenderer.addVertexWithUV(-8D, -2D, 0.0D, f2, f4);
-					worldrenderer.addVertexWithUV(8D, -2D, 0.0D, f3, f4);
-					worldrenderer.addVertexWithUV(8D, 2D, 0.0D, f3, f5);
-					worldrenderer.addVertexWithUV(-8D, 2D, 0.0D, f2, f5);
-					
-					worldrenderer.setColorOpaque_F(color[0], color[1], color[2]);
-					worldrenderer.addVertexWithUV(-8D, -2D, 0.0D, f2, f13);
-					worldrenderer.addVertexWithUV(8D, -2D, 0.0D, f3, f13);
-					worldrenderer.addVertexWithUV(8D, 2D, 0.0D, f3, f14);
-					worldrenderer.addVertexWithUV(-8D, 2D, 0.0D, f2, f14);
+					renderer.pos(-8D, -2D, 0.0D).tex(f2, f4).color(1F, 1F, 1F, 1F).endVertex();
+					renderer.pos(8D, -2D, 0.0D).tex(f3, f4).color(1F, 1F, 1F, 1F).endVertex();
+					renderer.pos(8D, 2D, 0.0D).tex(f3, f5).color(1F, 1F, 1F, 1F).endVertex();
+					renderer.pos(-8D, 2D, 0.0D).tex(f2, f5).color(1F, 1F, 1F, 1F).endVertex();
+
+					renderer.pos(-8D, -2D, 0.0D).tex(f2, f13).color(color[0], color[1], color[2], 1F).endVertex();
+					renderer.pos(8D, -2D, 0.0D).tex(f3, f13).color(color[0], color[1], color[2], 1F).endVertex();
+					renderer.pos(8D, 2D, 0.0D).tex(f3, f14).color(color[0], color[1], color[2], 1F).endVertex();
+					renderer.pos(-8D, 2D, 0.0D).tex(f2, f14).color(color[0], color[1], color[2], 1F).endVertex();
 				}
 				tess.draw();
 			}
