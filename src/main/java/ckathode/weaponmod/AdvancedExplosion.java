@@ -25,6 +25,9 @@ public class AdvancedExplosion extends Explosion
 	public float		explosionSize;
 	protected boolean	blocksCalculated;
 
+	public AdvancedExplosion(World world, Entity entity, double explosionX, double explosionY, double explosionZ, float explosionSize){
+		this(world, entity, explosionX, explosionY, explosionZ, explosionSize, false, false);
+	}
 	public AdvancedExplosion(World world, Entity entity, double explosionX, double explosionY, double explosionZ, float explosionSize, boolean isFlaming, boolean isSmoking)
 	{
 		super(world, entity, explosionX, explosionY, explosionZ, explosionSize, isFlaming, isSmoking);

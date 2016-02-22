@@ -1,5 +1,6 @@
 package ckathode.weaponmod;
 
+import ckathode.weaponmod.item.*;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -30,32 +31,7 @@ import ckathode.weaponmod.entity.projectile.dispense.DispenseCrossbowBolt;
 import ckathode.weaponmod.entity.projectile.dispense.DispenseDynamite;
 import ckathode.weaponmod.entity.projectile.dispense.DispenseJavelin;
 import ckathode.weaponmod.entity.projectile.dispense.DispenseMusketBullet;
-import ckathode.weaponmod.item.DartType;
-import ckathode.weaponmod.item.ItemBlowgunDart;
-import ckathode.weaponmod.item.ItemCannon;
-import ckathode.weaponmod.item.ItemCrossbow;
-import ckathode.weaponmod.item.ItemDummy;
-import ckathode.weaponmod.item.ItemDynamite;
-import ckathode.weaponmod.item.ItemFlail;
-import ckathode.weaponmod.item.ItemJavelin;
-import ckathode.weaponmod.item.ItemMelee;
-import ckathode.weaponmod.item.ItemMusket;
-import ckathode.weaponmod.item.ItemShooter;
-import ckathode.weaponmod.item.MeleeCompBattleaxe;
-import ckathode.weaponmod.item.MeleeCompBoomerang;
-import ckathode.weaponmod.item.MeleeCompFirerod;
-import ckathode.weaponmod.item.MeleeCompHalberd;
-import ckathode.weaponmod.item.MeleeCompKnife;
-import ckathode.weaponmod.item.MeleeCompNone;
-import ckathode.weaponmod.item.MeleeCompSpear;
-import ckathode.weaponmod.item.MeleeCompWarhammer;
-import ckathode.weaponmod.item.MeleeComponent;
 import ckathode.weaponmod.item.MeleeComponent.MeleeSpecs;
-import ckathode.weaponmod.item.RangedCompBlowgun;
-import ckathode.weaponmod.item.RangedCompBlunderbuss;
-import ckathode.weaponmod.item.RangedCompCrossbow;
-import ckathode.weaponmod.item.RangedCompFlintlock;
-import ckathode.weaponmod.item.WMItem;
 import ckathode.weaponmod.network.WMMessagePipeline;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -221,11 +197,11 @@ public class BalkonsWeaponMod
 		
 		if (modConfig.isEnabled("halberd"))
 		{
-			halberdWood = new ItemMelee("halberd.wood", new MeleeCompHalberd(Item.ToolMaterial.WOOD));
-			halberdStone = new ItemMelee("halberd.stone", new MeleeCompHalberd(Item.ToolMaterial.STONE));
-			halberdSteel = new ItemMelee("halberd.iron", new MeleeCompHalberd(Item.ToolMaterial.IRON));
-			halberdGold = new ItemMelee("halberd.gold", new MeleeCompHalberd(Item.ToolMaterial.GOLD));
-			halberdDiamond = new ItemMelee("halberd.diamond", new MeleeCompHalberd(Item.ToolMaterial.EMERALD));
+			halberdWood = new ItemHalberd("halberd.wood", new MeleeCompHalberd(Item.ToolMaterial.WOOD));
+			halberdStone = new ItemHalberd("halberd.stone", new MeleeCompHalberd(Item.ToolMaterial.STONE));
+			halberdSteel = new ItemHalberd("halberd.iron", new MeleeCompHalberd(Item.ToolMaterial.IRON));
+			halberdGold = new ItemHalberd("halberd.gold", new MeleeCompHalberd(Item.ToolMaterial.GOLD));
+			halberdDiamond = new ItemHalberd("halberd.diamond", new MeleeCompHalberd(Item.ToolMaterial.EMERALD));
 		}
 		
 		if (modConfig.isEnabled("battleaxe"))
