@@ -1,27 +1,29 @@
 package ckathode.weaponmod.entity.projectile;
 
+import ckathode.weaponmod.item.ItemFlail;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import ckathode.weaponmod.item.IItemWeapon;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EntityMaterialProjectile extends EntityProjectile
 {
 	private static final float[][]	MATERIAL_COLORS	= { { 0.6F, 0.4F, 0.1F }, { 0.5F, 0.5F, 0.5F }, { 1.0F, 1.0F, 1.0F }, { 0.0F, 0.8F, 0.7F }, { 1.0F, 0.9F, 0.0F } };
 	
 	protected ItemStack				thrownItem;
-	
+
 	public EntityMaterialProjectile(World world)
 	{
 		super(world);
 	}
-	
+
 	@Override
 	public void entityInit()
 	{
@@ -33,7 +35,7 @@ public abstract class EntityMaterialProjectile extends EntityProjectile
 	{
 		if (shootingEntity instanceof EntityLivingBase && entity instanceof EntityLivingBase)
 		{
-			return EnchantmentHelper.getEnchantmentModifierLiving((EntityLivingBase) shootingEntity, (EntityLivingBase) entity);
+			return EnchantmentHelper.func_152377_a(((EntityLivingBase) shootingEntity).getHeldItem(), ((EntityLivingBase) entity).getCreatureAttribute());
 		}
 		return 0F;
 	}
@@ -44,7 +46,7 @@ public abstract class EntityMaterialProjectile extends EntityProjectile
 		super.applyEntityHitEffects(entity);
 		if (shootingEntity instanceof EntityLivingBase && entity instanceof EntityLivingBase)
 		{
-			int i = EnchantmentHelper.getKnockbackModifier((EntityLivingBase) shootingEntity, (EntityLivingBase) entity);
+			int i = EnchantmentHelper.getKnockbackModifier((EntityLivingBase) shootingEntity);
 			if (i != 0)
 			{
 				entity.addVelocity(-MathHelper.sin(rotationYaw * (float) Math.PI / 180.0F) * i * 0.5F, 0.1D, MathHelper.cos(rotationYaw * (float) Math.PI / 180.0F) * i * 0.5F);
@@ -77,12 +79,21 @@ public abstract class EntityMaterialProjectile extends EntityProjectile
 	
 	protected final void updateWeaponMaterial()
 	{
-		if (thrownItem != null && thrownItem.getItem() instanceof IItemWeapon && ((IItemWeapon) thrownItem.getItem()).getMeleeComponent() != null)
+		if (thrownItem != null && ((thrownItem.getItem() instanceof IItemWeapon && ((IItemWeapon) thrownItem.getItem()).getMeleeComponent() != null) || thrownItem.getItem() instanceof ItemFlail))
 		{
 			int material = MaterialRegistry.getMaterialID(thrownItem);
 			if (material < 0)
 			{
-				material = ((IItemWeapon) thrownItem.getItem()).getMeleeComponent().weaponMaterial.ordinal();
+				if(thrownItem.getItem() instanceof IItemWeapon)
+					material = ((IItemWeapon) thrownItem.getItem()).getMeleeComponent().weaponMaterial.ordinal();
+				else {
+					String name = thrownItem.getItem().getRegistryName().substring(10);
+					if(name.equals("flail.wood")) material = Item.ToolMaterial.WOOD.ordinal();
+					if(name.equals("flail.stone")) material = Item.ToolMaterial.STONE.ordinal();
+					if(name.equals("flail.iron")) material = Item.ToolMaterial.IRON.ordinal();
+					if(name.equals("flail.gold")) material = Item.ToolMaterial.GOLD.ordinal();
+					if(name.equals("flail.diamond")) material = Item.ToolMaterial.EMERALD.ordinal();
+				}
 			}
 			dataWatcher.updateObject(25, Byte.valueOf((byte) (material & 0xFF)));
 		}

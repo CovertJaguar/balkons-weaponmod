@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -36,15 +37,15 @@ public class MeleeCompFirerod extends MeleeComponent
 			float f = 1F;
 			float f1 = 27F;
 			float particleX = -MathHelper.sin(((entity.rotationYaw + f1) / 180F) * 3.141593F) * MathHelper.cos((entity.rotationPitch / 180F) * 3.141593F) * f;
-			float particleY = -MathHelper.sin((entity.rotationPitch / 180F) * 3.141593F) - 0.1F;
+			float particleY = -MathHelper.sin((entity.rotationPitch / 180F) * 3.141593F) + entity.getEyeHeight();
 			float particleZ = MathHelper.cos(((entity.rotationYaw + f1) / 180F) * 3.141593F) * MathHelper.cos((entity.rotationPitch / 180F) * 3.141593F) * f;
 			if (weapon.getItemRand().nextInt(5) == 0)
 			{
-				world.spawnParticle("flame", entity.posX + particleX, entity.posY + particleY, entity.posZ + particleZ, 0.0D, 0.0D, 0.0D);
+				world.spawnParticle(EnumParticleTypes.FLAME, entity.posX + particleX, entity.posY + particleY, entity.posZ + particleZ, 0.0D, 0.0D, 0.0D);
 			}
 			if (weapon.getItemRand().nextInt(5) == 0)
 			{
-				world.spawnParticle("smoke", entity.posX + particleX, entity.posY + particleY, entity.posZ + particleZ, 0.0D, 0.0D, 0.0D);
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, entity.posX + particleX, entity.posY + particleY, entity.posZ + particleZ, 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}

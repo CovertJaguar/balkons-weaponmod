@@ -7,9 +7,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class ExtendedReachHelper
@@ -25,26 +25,26 @@ public abstract class ExtendedReachHelper
 	public static MovingObjectPosition getMouseOver(float frame, float dist)
 	{
 		MovingObjectPosition mop = null;
-		if (mc.renderViewEntity != null)
+		if (mc.getRenderViewEntity() != null)
 		{
 			if (mc.theWorld != null)
 			{
 				double var2 = dist;
-				mop = mc.renderViewEntity.rayTrace(var2, frame);
+				mop = mc.getRenderViewEntity().rayTrace(var2, frame);
 				double calcdist = var2;
-				Vec3 pos = mc.renderViewEntity.getPosition(frame);
+				Vec3 pos = mc.getRenderViewEntity().getPositionEyes(frame);
 				var2 = calcdist;
 				if (mop != null)
 				{
 					calcdist = mop.hitVec.distanceTo(pos);
 				}
 				
-				Vec3 lookvec = mc.renderViewEntity.getLook(frame);
+				Vec3 lookvec = mc.getRenderViewEntity().getLook(frame);
 				Vec3 var8 = pos.addVector(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2);
 				Entity pointedEntity = null;
 				float var9 = 1.0F;
 				@SuppressWarnings("unchecked")
-				List<Entity> list = mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.renderViewEntity, mc.renderViewEntity.boundingBox.addCoord(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2).expand(var9, var9, var9));
+				List<Entity> list = mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.getRenderViewEntity(), mc.getRenderViewEntity().getEntityBoundingBox().addCoord(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2).expand(var9, var9, var9));
 				double d = calcdist;
 				
 				for (Entity entity : list)
@@ -52,7 +52,7 @@ public abstract class ExtendedReachHelper
 					if (entity.canBeCollidedWith())
 					{
 						float bordersize = entity.getCollisionBorderSize();
-						AxisAlignedBB aabb = entity.boundingBox.expand(bordersize, bordersize, bordersize);
+						AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(bordersize, bordersize, bordersize);
 						MovingObjectPosition mop0 = aabb.calculateIntercept(pos, var8);
 						
 						if (aabb.isVecInside(pos))

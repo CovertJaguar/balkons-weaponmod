@@ -1,7 +1,10 @@
 package ckathode.weaponmod.render;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
@@ -15,6 +18,11 @@ import ckathode.weaponmod.entity.projectile.EntityFlail;
 
 public class RenderFlail extends Render
 {
+	public RenderFlail(RenderManager rendermanager)
+	{
+		super(rendermanager);
+	}
+
 	public void renderFlail(EntityFlail entityarrow, double d, double d1, double d2, float f, float f1)
 	{
 		bindEntityTexture(entityarrow);
@@ -22,9 +30,11 @@ public class RenderFlail extends Render
 		GL11.glTranslatef((float) d, (float) d1, (float) d2);
 		GL11.glRotatef((entityarrow.prevRotationYaw + (entityarrow.rotationYaw - entityarrow.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(entityarrow.prevRotationPitch + (entityarrow.rotationPitch - entityarrow.prevRotationPitch) * f1, 0.0F, 0.0F, 1.0F);
-		Tessellator tessellator = Tessellator.instance;
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer renderer = tessellator.getWorldRenderer();
 		
 		// ===============FLAIL BALL===============
+
 		float[] color = entityarrow.getMaterialColor();
 		int i = 0;
 		float f2 = 0.0F;
@@ -44,33 +54,40 @@ public class RenderFlail extends Render
 			GL11.glRotatef(f12, 0.0F, 0.0F, 1.0F);
 		}
 		
-		GL11.glColor3f(color[0], color[1], color[2]);
+		//GL11.glColor3f(color[0], color[1], color[2]);
+		//GL11.glColor3f(1F, 1F, 1F);
+		//System.out.println(String.format("Color: %f,%f,%f", color[0], color[1], color[2]));
+
 		GL11.glRotatef(45F, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(f10, f10, f10);
 		GL11.glTranslatef(-4F, 0.0F, 0.0F);
 		GL11.glNormal3f(f10, 0.0F, 0.0F);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(1.5D, -2D, -2D, f6, f8);
-		tessellator.addVertexWithUV(1.5D, -2D, 2D, f7, f8);
-		tessellator.addVertexWithUV(1.5D, 2D, 2D, f7, f9);
-		tessellator.addVertexWithUV(1.5D, 2D, -2D, f6, f9);
+
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		renderer.pos(1.5D, -2D, -2D).tex(f6, f8).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, -2D, 2D).tex(f7, f8).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, 2D, 2D).tex(f7, f9).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, 2D, -2D).tex(f6, f9).color(color[0], color[1], color[2], 1F).endVertex();
 		tessellator.draw();
+
 		GL11.glNormal3f(-f10, 0.0F, 0.0F);
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(1.5D, 2D, -2D, f6, f8);
-		tessellator.addVertexWithUV(1.5D, 2D, 2D, f7, f8);
-		tessellator.addVertexWithUV(1.5D, -2D, 2D, f7, f9);
-		tessellator.addVertexWithUV(1.5D, -2D, -2D, f6, f9);
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		renderer.pos(1.5D, 2D, -2D).tex(f6, f8).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, 2D, 2D).tex(f7, f8).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, -2D, 2D).tex(f7, f9).color(color[0], color[1], color[2], 1F).endVertex();
+		renderer.pos(1.5D, -2D, -2D).tex(f6, f9).color(color[0], color[1], color[2], 1F).endVertex();
 		tessellator.draw();
+
 		for (int j = 0; j < 4; j++)
 		{
 			GL11.glRotatef(90F, 1.0F, 0.0F, 0.0F);
 			GL11.glNormal3f(0.0F, 0.0F, f10);
-			tessellator.startDrawingQuads();
-			tessellator.addVertexWithUV(-8D, -2D, 0.0D, f2, f4);
-			tessellator.addVertexWithUV(8D, -2D, 0.0D, f3, f4);
-			tessellator.addVertexWithUV(8D, 2D, 0.0D, f3, f5);
-			tessellator.addVertexWithUV(-8D, 2D, 0.0D, f2, f5);
+
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			renderer.pos(-8D, -2D, 0.0D).tex(f2, f4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(8D, -2D, 0.0D).tex(f3, f4).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(8D, 2D, 0.0D).tex(f3, f5).color(color[0], color[1], color[2], 1F).endVertex();
+			renderer.pos(-8D, 2D, 0.0D).tex(f2, f5).color(color[0], color[1], color[2], 1F).endVertex();
 			tessellator.draw();
 		}
 		
@@ -93,12 +110,13 @@ public class RenderFlail extends Render
 		float f19 = 0.5F; // 8
 		GL11.glRotatef(180F - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 1.0F, 0.0F);
-		tessellator.addVertexWithUV(0.0F - f18, 0.0F - f19, 0.0D, f13, f16);
-		tessellator.addVertexWithUV(f17 - f18, 0.0F - f19, 0.0D, f14, f16);
-		tessellator.addVertexWithUV(f17 - f18, 1.0F - f19, 0.0D, f14, f15);
-		tessellator.addVertexWithUV(0.0F - f18, 1.0F - f19, 0.0D, f13, f15);
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+		//renderer.setNormal(0.0F, 1.0F, 0.0F);
+		//renderer.putNormal(0.0F, 1.0F, 0.0F);
+		renderer.pos(0.0F - f18, 0.0F - f19, 0.0D).tex(f13, f16).normal(0.0F, 1.0F, 0.0F).endVertex();
+		renderer.pos(f17 - f18, 0.0F - f19, 0.0D).tex(f14, f16).normal(0.0F, 1.0F, 0.0F).endVertex();
+		renderer.pos(f17 - f18, 1.0F - f19, 0.0D).tex(f14, f15).normal(0.0F, 1.0F, 0.0F).endVertex();
+		renderer.pos(0.0F - f18, 1.0F - f19, 0.0D).tex(f13, f15).normal(0.0F, 1.0F, 0.0F).endVertex();
 		tessellator.draw();
 		GL11.glDisable(32826 /* GL_RESCALE_NORMAL_EXT */);
 		GL11.glPopMatrix();
@@ -106,11 +124,11 @@ public class RenderFlail extends Render
 		{
 			float f22 = ((EntityLivingBase) entityarrow.shootingEntity).getSwingProgress(f1); // 11
 			float f23 = MathHelper.sin(MathHelper.sqrt_float(f22) * 3.141593F); // 12
-			Vec3 vec3d = Vec3.createVectorHelper(-0.5D, 0.03D, 0.8D);
-			vec3d.rotateAroundX((-(entityarrow.shootingEntity.prevRotationPitch + (entityarrow.shootingEntity.rotationPitch - entityarrow.shootingEntity.prevRotationPitch) * f1) * 3.141593F) / 180F);
-			vec3d.rotateAroundY((-(entityarrow.shootingEntity.prevRotationYaw + (entityarrow.shootingEntity.rotationYaw - entityarrow.shootingEntity.prevRotationYaw) * f1) * 3.141593F) / 180F);
-			vec3d.rotateAroundY(f23 * 0.5F);
-			vec3d.rotateAroundX(-f23 * 0.7F);
+			Vec3 vec3d = new Vec3(-0.5D, 0.03D, 0.8D);
+			vec3d.rotatePitch((-(entityarrow.shootingEntity.prevRotationPitch + (entityarrow.shootingEntity.rotationPitch - entityarrow.shootingEntity.prevRotationPitch) * f1) * 3.141593F) / 180F);
+			vec3d.rotateYaw((-(entityarrow.shootingEntity.prevRotationYaw + (entityarrow.shootingEntity.rotationYaw - entityarrow.shootingEntity.prevRotationYaw) * f1) * 3.141593F) / 180F);
+			vec3d.rotateYaw(f23 * 0.5F);
+			vec3d.rotatePitch(-f23 * 0.7F);
 			double d7 = entityarrow.shootingEntity.prevPosX + (entityarrow.shootingEntity.posX - entityarrow.shootingEntity.prevPosX) * f1 + vec3d.xCoord;
 			double d8 = entityarrow.shootingEntity.prevPosY + (entityarrow.shootingEntity.posY - entityarrow.shootingEntity.prevPosY) * f1 + vec3d.yCoord;
 			double d9 = entityarrow.shootingEntity.prevPosZ + (entityarrow.shootingEntity.posZ - entityarrow.shootingEntity.prevPosZ) * f1 + vec3d.zCoord;
@@ -131,15 +149,18 @@ public class RenderFlail extends Render
 			double d15 = (float) (d9 - d12);
 			GL11.glDisable(3553 /* GL_TEXTURE_2D */);
 			GL11.glDisable(2896 /* GL_LIGHTING */);
-			tessellator.startDrawing(GL11.GL_LINE_STRIP);
-			tessellator.setColorOpaque_I(0);
+			renderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+			//renderer.startDrawing(GL11.GL_LINE_STRIP);
+			//renderer.setColorOpaque_I(0);
+			//renderer.putColor4(0);
 			int j = 16;
 			for (int k = 0; k <= j; k++)
 			{
 				float f24 = (float) k / (float) j;
-				tessellator.addVertex(d + d13 * f24, d1 + d14 * (f24 * f24 + f24) * 0.5D + 0.25D, d2 + d15 * f24);
+				//renderer.addVertex(d + d13 * f24, d1 + d14 * (f24 * f24 + f24) * 0.5D + 0.25D, d2 + d15 * f24);
+				renderer.pos(d + d13 * f24, d1 + d14 * (f24 * f24 + f24) * 0.5D + 0.25D, d2 + d15 * f24).color(0,0,0,255).endVertex();
 			}
-			
+
 			tessellator.draw();
 			GL11.glEnable(2896 /* GL_LIGHTING */);
 			GL11.glEnable(3553 /* GL_TEXTURE_2D */);

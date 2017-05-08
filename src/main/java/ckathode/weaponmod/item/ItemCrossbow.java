@@ -1,36 +1,29 @@
 package ckathode.weaponmod.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCrossbow extends ItemShooter
 {
-	public IIcon	iconIndexLoaded;
-	
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation	modelLocationLoaded = new ModelResourceLocation("weaponmod:crossbow-loaded", "inventory");
+
 	public ItemCrossbow(String id, RangedComponent rangedcomponent, MeleeComponent meleecomponent)
 	{
 		super(id, rangedcomponent, meleecomponent);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int renderPass)
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
 		if (RangedComponent.isReloaded(stack))
 		{
-			return iconIndexLoaded;
+			return modelLocationLoaded;
 		}
-		return super.getIcon(stack, renderPass);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		super.registerIcons(par1IconRegister);
-		iconIndexLoaded = par1IconRegister.registerIcon(getIconString() + "-loaded");
+		return super.getModel(stack, player, useRemaining);
 	}
 }

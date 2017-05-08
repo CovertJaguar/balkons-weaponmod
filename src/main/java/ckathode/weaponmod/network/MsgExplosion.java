@@ -7,28 +7,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.ChunkPosition;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import ckathode.weaponmod.AdvancedExplosion;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MsgExplosion extends WMMessage
 {
 	private double				x, y, z;
 	private float				size;
-	private List<ChunkPosition>	blocks;
+	private List<BlockPos>		blocks;
 	private boolean				smallParticles, bigParticles;
 
 	@SuppressWarnings("unchecked")
 	public MsgExplosion(AdvancedExplosion explosion, boolean smallparts, boolean bigparts)
 	{
-		x = explosion.explosionX;
-		y = explosion.explosionY;
-		z = explosion.explosionZ;
+		x = explosion.getExplosionX();
+		y = explosion.getExplosionY();
+		z = explosion.getExplosionZ();
 		size = explosion.explosionSize;
-		blocks = explosion.affectedBlockPositions;
+		blocks = explosion.getAffectedBlockPositions();
 		smallParticles = smallparts;
 		bigParticles = bigparts;
 	}
@@ -48,13 +48,13 @@ public class MsgExplosion extends WMMessage
 		bigParticles = buf.readBoolean();
 
 		int size = buf.readInt();
-		blocks = new ArrayList<ChunkPosition>(size);
+		blocks = new ArrayList<BlockPos>(size);
 		for (int i = 0; i < size; i++)
 		{
 			int ix = buf.readByte() + (int) x;
 			int iy = buf.readByte() + (int) y;
 			int iz = buf.readByte() + (int) z;
-			blocks.add(new ChunkPosition(ix, iy, iz));
+			blocks.add(new BlockPos(ix, iy, iz));
 		}
 	}
 
@@ -72,10 +72,10 @@ public class MsgExplosion extends WMMessage
 		buf.writeInt(n);
 		for (int i = 0; i < n; i++)
 		{
-			ChunkPosition pos = blocks.get(i);
-			int dx = pos.chunkPosX - (int) x;
-			int dy = pos.chunkPosY - (int) y;
-			int dz = pos.chunkPosZ - (int) z;
+			BlockPos pos = blocks.get(i);
+			int dx = pos.getX() - (int) x;
+			int dy = pos.getY() - (int) y;
+			int dz = pos.getZ() - (int) z;
 			buf.writeByte(dx);
 			buf.writeByte(dy);
 			buf.writeByte(dz);

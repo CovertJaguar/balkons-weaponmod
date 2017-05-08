@@ -64,7 +64,7 @@ public class MeleeCompWarhammer extends MeleeComponent
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemstack)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 	
 	@Override

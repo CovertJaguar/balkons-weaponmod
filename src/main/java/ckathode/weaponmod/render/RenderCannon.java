@@ -1,6 +1,7 @@
 package ckathode.weaponmod.render;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -16,8 +17,9 @@ public class RenderCannon extends Render
 	protected ModelCannonBarrel		modelBarrel;
 	protected ModelCannonStandard	modelStandard;
 	
-	public RenderCannon()
+	public RenderCannon(RenderManager rendermanager)
 	{
+		super(rendermanager);
 		shadowSize = 1.0F;
 		modelCannon = new ModelCannon();
 		modelBarrel = new ModelCannonBarrel();
@@ -31,7 +33,7 @@ public class RenderCannon extends Render
 		float rot = entitycannon.prevRotationPitch + (entitycannon.rotationPitch - entitycannon.prevRotationPitch) * f1;
 		rot = Math.min(rot, 20F);
 		
-		GL11.glTranslatef((float) d, (float) d1 + 1.9F, (float) d2);
+		GL11.glTranslatef((float) d, (float) d1 + 2.4F, (float) d2);
 		GL11.glRotatef(-f, 0.0F, 1.0F, 0.0F);
 		float f3 = entitycannon.getTimeSinceHit() - f1;
 		float f4 = entitycannon.getCurrentDamage() - f1;

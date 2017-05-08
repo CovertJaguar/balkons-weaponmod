@@ -2,6 +2,7 @@ package ckathode.weaponmod.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import ckathode.weaponmod.ReloadHelper;
@@ -67,14 +68,14 @@ public class RangedCompFlintlock extends RangedComponent
 		world.playSoundEffect(x, y, z, "random.explode", 3F, 1F / (weapon.getItemRand().nextFloat() * 0.4F + 0.7F));
 		
 		float particleX = -MathHelper.sin(((yaw + 23F) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
-		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) - 0.1F;
+		float particleY = -MathHelper.sin((pitch / 180F) * 3.141593F) + 1.6F;
 		float particleZ = MathHelper.cos(((yaw + 23F) / 180F) * 3.141593F) * MathHelper.cos((pitch / 180F) * 3.141593F);
 		
 		for (int i = 0; i < 3; i++)
 		{
-			world.spawnParticle("smoke", x + particleX, y + particleY, z + particleZ, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + particleX, y + particleY, z + particleZ, 0.0D, 0.0D, 0.0D);
 		}
-		world.spawnParticle("flame", x + particleX, y + particleY, z + particleZ, 0.0D, 0.0D, 0.0D);
+		world.spawnParticle(EnumParticleTypes.FLAME, x + particleX, y + particleY, z + particleZ, 0.0D, 0.0D, 0.0D);
 	}
 	
 	@Override

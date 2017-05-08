@@ -3,6 +3,7 @@ package ckathode.weaponmod.entity.projectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -10,6 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import ckathode.weaponmod.WeaponDamageSource;
 import ckathode.weaponmod.item.ItemFlail;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityFlail extends EntityMaterialProjectile
 {
@@ -19,7 +23,10 @@ public class EntityFlail extends EntityMaterialProjectile
 	private double	distanceX;
 	private double	distanceY;
 	private double	distanceZ;
-	
+	private Item.ToolMaterial material;
+
+	public static Map<Integer, Item.ToolMaterial> materials = new HashMap<Integer, Item.ToolMaterial>();
+
 	public EntityFlail(World world)
 	{
 		super(world);
@@ -34,7 +41,7 @@ public class EntityFlail extends EntityMaterialProjectile
 		this(world);
 		setPosition(d, d1, d2);
 	}
-	
+
 	public EntityFlail(World world, EntityLivingBase entityliving, ItemStack itemstack)
 	{
 		this(world);
@@ -103,7 +110,7 @@ public class EntityFlail extends EntityMaterialProjectile
 		}
 		
 		double targetPosX = shootingEntity.posX;
-		double targetPosY = shootingEntity.boundingBox.minY + 0.4F;
+		double targetPosY = shootingEntity.getEntityBoundingBox().minY + 0.4F;
 		double targetPosZ = shootingEntity.posZ;
 		
 		float f = 27F;
@@ -210,7 +217,7 @@ public class EntityFlail extends EntityMaterialProjectile
 		super.setThrownItemStack(itemstack);
 		flailDamage = ((ItemFlail) itemstack.getItem()).getFlailDamage();
 	}
-	
+
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound)
 	{
@@ -235,10 +242,15 @@ public class EntityFlail extends EntityMaterialProjectile
 	{
 		return 0;
 	}
+
+	public void setMaterial(Item.ToolMaterial material) {
+		this.material = material;
+	}
+
 	
-	@Override
+	/*@Override
 	public float getShadowSize()
 	{
 		return 0.2F;
-	}
+	}*/
 }

@@ -49,7 +49,7 @@ public abstract class PlayerWeaponData
 		String playername;
 		if (player.getGameProfile() != null)
 		{
-			playername = player.getCommandSenderName();
+			playername = player.getName();
 		} else
 		{
 			playername = "[unknown]";

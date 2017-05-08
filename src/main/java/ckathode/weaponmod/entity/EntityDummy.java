@@ -29,14 +29,13 @@ public class EntityDummy extends Entity
 		rotationPitch = -20F;
 		setRotation(rotationYaw, rotationPitch);
 		setSize(0.5F, 1.9F);
-		yOffset = 0.41F;
 		durability = 50;
 	}
 	
 	public EntityDummy(World world, double d, double d1, double d2)
 	{
 		this(world);
-		setPosition(d, d1 + yOffset, d2);
+		setPosition(d, d1 + getYOffset(), d2);
 		motionX = 0.0D;
 		motionY = 0.0D;
 		motionZ = 0.0D;
@@ -52,17 +51,23 @@ public class EntityDummy extends Entity
 		dataWatcher.addObject(18, Byte.valueOf((byte) 1));
 		dataWatcher.addObject(19, Integer.valueOf(0));
 	}
+
+	@Override
+	public double getYOffset()
+	{
+		return 0.41F;
+	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-		return entity.boundingBox;
+		return entity.getEntityBoundingBox();
 	}
 	
-	@Override
+	//@Override
 	public AxisAlignedBB getBoundingBox()
 	{
-		return boundingBox;
+		return getEntityBoundingBox();
 	}
 	
 	@Override
@@ -181,7 +186,7 @@ public class EntityDummy extends Entity
 		moveEntity(0D, motionY, 0D);
 		
 		@SuppressWarnings("unchecked")
-		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 		if (list != null && list.size() > 0)
 		{
 			for (int j1 = 0; j1 < list.size(); j1++)
@@ -196,19 +201,19 @@ public class EntityDummy extends Entity
 	}
 	
 	@Override
-	protected void fall(float f)
+	public void fall(float f, float f1)
 	{
-		super.fall(f);
+		super.fall(f, f1);
 		if (!onGround) return;
 		int i = MathHelper.floor_float(f);
 		attackEntityFrom(DamageSource.fall, i);
 	}
 	
-	@Override
+	/*@Override
 	public float getShadowSize()
 	{
 		return 1.0F;
-	}
+	}*/
 	
 	public void dropAsItem(boolean destroyed)
 	{

@@ -2,7 +2,7 @@ package ckathode.weaponmod.item;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import ckathode.weaponmod.BalkonsWeaponMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,10 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlowgunDart extends WMItem
 {
@@ -21,6 +20,15 @@ public class ItemBlowgunDart extends WMItem
 	{
 		super(id);
 		setHasSubtypes(true);
+
+		for (int damage = 1; damage < DartType.dartTypes.length; damage++)
+		{
+			DartType type = DartType.dartTypes[damage];
+			if (type != null)
+			{
+				BalkonsWeaponMod.proxy.setTextureName(this, damage, type.typeName);
+			}
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -32,25 +40,6 @@ public class ItemBlowgunDart extends WMItem
 			if (DartType.dartTypes[j] != null)
 			{
 				list.add(new ItemStack(item, 1, j));
-			}
-		}
-	}
-	
-	@Override
-	public IIcon getIconFromDamage(int damage)
-	{
-		return (damage >= 0 && damage < DartType.dartTypes.length && DartType.dartTypes[damage] != null) ? DartType.dartTypes[damage].itemIcon : itemIcon;
-	}
-	
-	@Override
-	public void registerIcons(IIconRegister iconregister)
-	{
-		itemIcon = iconregister.registerIcon(getIconString());
-		for (DartType type : DartType.dartTypes)
-		{
-			if (type != null)
-			{
-				type.itemIcon = iconregister.registerIcon("weaponmod:" + type.typeName);
 			}
 		}
 	}

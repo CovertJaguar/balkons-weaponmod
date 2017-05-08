@@ -1,5 +1,6 @@
 package ckathode.weaponmod;
 
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import ckathode.weaponmod.network.MsgCannonFire;
 import ckathode.weaponmod.network.MsgExplosion;
@@ -18,11 +19,20 @@ public class WMCommonProxy
 		pipeline.registerPacket(MsgExplosion.class);
 	}
 	
-	public void registerIcons()
+	public void registerIcons(WeaponModConfig config)
 	{
 	}
 	
 	public void registerRenderers(WeaponModConfig config)
 	{
+	}
+
+	public void setTextureName(Item item, int damage, String texturename)
+	{
+	}
+
+	public void setTextureName(Item item, String texturename)
+	{
+		setTextureName(item, 0, texturename);
 	}
 }

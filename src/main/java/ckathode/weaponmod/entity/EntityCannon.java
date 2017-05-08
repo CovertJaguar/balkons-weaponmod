@@ -15,6 +15,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
@@ -29,13 +30,12 @@ public class EntityCannon extends EntityBoat
 		rotationPitch = -20F;
 		setRotation(rotationYaw, rotationPitch);
 		setSize(1.5F, 1.0F);
-		yOffset = height / 2.0F;
 	}
 	
 	public EntityCannon(World world, double d, double d1, double d2)
 	{
 		this(world);
-		setPosition(d, d1 + yOffset, d2);
+		setPosition(d, d1 + getYOffset(), d2);
 		motionX = 0.0D;
 		motionY = 0.0D;
 		motionZ = 0.0D;
@@ -54,17 +54,23 @@ public class EntityCannon extends EntityBoat
 		dataWatcher.addObject(21, Short.valueOf((short) 0));
 		dataWatcher.addObject(22, Byte.valueOf((byte) 0));
 	}
+
+	@Override
+	public double getYOffset()
+	{
+		return height / 2.0F;
+	}
 	
 	@Override
 	public AxisAlignedBB getCollisionBox(Entity entity)
 	{
-		return entity.boundingBox;
+		return entity.getEntityBoundingBox();
 	}
 	
-	@Override
+	//@Override
 	public AxisAlignedBB getBoundingBox()
 	{
-		return boundingBox;
+		return getEntityBoundingBox();
 	}
 	
 	@Override
@@ -202,7 +208,7 @@ public class EntityCannon extends EntityBoat
 		moveEntity(motionX, motionY, motionZ);
 		
 		@SuppressWarnings("unchecked")
-		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(0.2D, 0.0D, 0.2D));
 		if (list != null && !list.isEmpty())
 		{
 			for (Entity entity : list)
@@ -230,9 +236,9 @@ public class EntityCannon extends EntityBoat
 	}
 	
 	@Override
-	protected void fall(float f)
+	public void fall(float f, float f1)
 	{
-		super.fall(f);
+		super.fall(f, f1);
 		int i = MathHelper.floor_float(f);
 		i *= 2;
 		attackEntityFrom(DamageSource.fall, i);
@@ -280,7 +286,7 @@ public class EntityCannon extends EntityBoat
 		double d1 = MathHelper.cos(yaw) * -1F;
 		for (int i = 0; i < 20; i++)
 		{
-			worldObj.spawnParticle("smoke", posX + d + rand.nextDouble() * 0.5D - 0.25D, posY + rand.nextDouble() * 0.5D, posZ + d1 + rand.nextDouble() * 0.5D - 0.25D, rand.nextDouble() * 0.1D - 0.05D, rand.nextDouble() * 0.1D - 0.05D, rand.nextDouble() * 0.1D - 0.05D);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX + d + rand.nextDouble() * 0.5D - 0.25D, posY + rand.nextDouble() * 0.5D, posZ + d1 + rand.nextDouble() * 0.5D - 0.25D, rand.nextDouble() * 0.1D - 0.05D, rand.nextDouble() * 0.1D - 0.05D, rand.nextDouble() * 0.1D - 0.05D);
 		}
 		
 		if (riddenByEntity != null)
@@ -314,11 +320,11 @@ public class EntityCannon extends EntityBoat
 		}
 	}
 	
-	@Override
+	/*@Override
 	public float getShadowSize()
 	{
 		return 1.0F;
-	}
+	}*/
 	
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound)

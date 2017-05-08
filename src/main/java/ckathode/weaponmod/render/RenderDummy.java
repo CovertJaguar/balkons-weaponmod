@@ -1,6 +1,7 @@
 package ckathode.weaponmod.render;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -14,8 +15,9 @@ public class RenderDummy extends Render
 {
 	private ModelDummy	modelDummy;
 	
-	public RenderDummy()
+	public RenderDummy(RenderManager rendermanager)
 	{
+		super(rendermanager);
 		shadowSize = 1.0F;
 		modelDummy = new ModelDummy();
 	}
@@ -23,7 +25,7 @@ public class RenderDummy extends Render
 	public void renderDummy(EntityDummy entitydummy, double d, double d1, double d2, float f, float f1)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) d, (float) d1 - 0.4F, (float) d2);
+		GL11.glTranslatef((float) d, (float) d1, (float) d2);
 		GL11.glRotatef(180F - f, 0.0F, 1.0F, 0.0F);
 		float f3 = entitydummy.getTimeSinceHit() - f1;
 		float f4 = entitydummy.getCurrentDamage() - f1;

@@ -6,30 +6,45 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 public class AdvancedExplosion extends Explosion
 {
 	public World		worldObj;
+	public Entity		exploder;
+	public float		explosionSize;
 	protected boolean	blocksCalculated;
-	
-	public AdvancedExplosion(World world, Entity entity, double d, double d1, double d2, float f)
-	{
-		super(world, entity, d, d1, d2, f);
-		worldObj = world;
+
+	public AdvancedExplosion(World world, Entity entity, double explosionX, double explosionY, double explosionZ, float explosionSize){
+		this(world, entity, explosionX, explosionY, explosionZ, explosionSize, false, false);
 	}
-	
-	public void setAffectedBlockPositions(List<ChunkPosition> list)
+	public AdvancedExplosion(World world, Entity entity, double explosionX, double explosionY, double explosionZ, float explosionSize, boolean isFlaming, boolean isSmoking)
 	{
-		affectedBlockPositions = list;
+		super(world, entity, explosionX, explosionY, explosionZ, explosionSize, isFlaming, isSmoking);
+		this.explosionSize = explosionSize;
+
+
+		worldObj = world;
+		exploder = entity;
+		this.explosionSize = explosionSize;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setAffectedBlockPositions(List<BlockPos> list)
+	{
+		func_180342_d();
+		//getAffectedBlockPositions().addAll(list);
+		getAffectedBlockPositions().addAll(list);
 		blocksCalculated = true;
 	}
 	
@@ -41,15 +56,15 @@ public class AdvancedExplosion extends Explosion
 	public void doEntityExplosion(DamageSource damagesource)
 	{
 		float size = explosionSize * 2F;
-		int i0 = MathHelper.floor_double(explosionX - size - 1.0D);
-		int i1 = MathHelper.floor_double(explosionX + size + 1.0D);
-		int j0 = MathHelper.floor_double(explosionY - size - 1.0D);
-		int j1 = MathHelper.floor_double(explosionY + size + 1.0D);
-		int k0 = MathHelper.floor_double(explosionZ - size - 1.0D);
-		int k1 = MathHelper.floor_double(explosionZ + size + 1.0D);
+		int i0 = MathHelper.floor_double(getExplosionX() - size - 1.0D);
+		int i1 = MathHelper.floor_double(getExplosionX() + size + 1.0D);
+		int j0 = MathHelper.floor_double(getExplosionY() - size - 1.0D);
+		int j1 = MathHelper.floor_double(getExplosionY() + size + 1.0D);
+		int k0 = MathHelper.floor_double(getExplosionZ() - size - 1.0D);
+		int k1 = MathHelper.floor_double(getExplosionZ() + size + 1.0D);
 		@SuppressWarnings("unchecked")
-		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(exploder, AxisAlignedBB.getBoundingBox(i0, j0, k0, i1, j1, k1));
-		Vec3 vec31 = Vec3.createVectorHelper(explosionX, explosionY, explosionZ);
+		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(exploder, new AxisAlignedBB(i0, j0, k0, i1, j1, k1));
+		Vec3 vec31 = new Vec3(getExplosionX(), getExplosionY(), getExplosionZ());
 		
 		double dx;
 		double dy;
@@ -58,13 +73,13 @@ public class AdvancedExplosion extends Explosion
 		for (int i = 0; i < list.size(); i++)
 		{
 			Entity entity = list.get(i);
-			double dr = entity.getDistance(explosionX, explosionY, explosionZ) / size;
+			double dr = entity.getDistance(getExplosionX(), getExplosionY(), getExplosionZ()) / size;
 			
 			if (dr <= 1.0D)
 			{
-				dx = entity.posX - explosionX;
-				dy = entity.posY - explosionY;
-				dz = entity.posZ - explosionZ;
+				dx = entity.posX - getExplosionX();
+				dy = entity.posY - getExplosionY();
+				dz = entity.posZ - getExplosionZ();
 				double d = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
 				
 				if (d != 0D)
@@ -72,7 +87,7 @@ public class AdvancedExplosion extends Explosion
 					dx /= d;
 					dy /= d;
 					dz /= d;
-					double dens = worldObj.getBlockDensity(vec31, entity.boundingBox);
+					double dens = worldObj.getBlockDensity(vec31, entity.getEntityBoundingBox());
 					double var36 = (1.0D - dr) * dens;
 					int damage = (int) ((var36 * var36 + var36) / 2.0D * 8.0D * size + 1D);
 					entity.attackEntityFrom(damagesource, damage);
@@ -90,32 +105,30 @@ public class AdvancedExplosion extends Explosion
 		{
 			calculateBlockExplosion();
 		}
-		for (int i = affectedBlockPositions.size() - 1; i >= 0; i--)
+		for (int i = getAffectedBlockPositions().size() - 1; i >= 0; i--)
 		{
-			ChunkPosition chunkposition = (ChunkPosition) affectedBlockPositions.get(i);
-			int x = chunkposition.chunkPosX;
-			int y = chunkposition.chunkPosY;
-			int z = chunkposition.chunkPosZ;
-			Block block = worldObj.getBlock(x, y, z);
+			BlockPos blockpos = (BlockPos) getAffectedBlockPositions().get(i);
+			IBlockState blockstate = worldObj.getBlockState(blockpos);
+			Block block = blockstate.getBlock();
 			if (block != null)
 			{
 				if (block.canDropFromExplosion(this))
 				{
-					block.dropBlockAsItemWithChance(worldObj, x, y, z, worldObj.getBlockMetadata(x, y, z), 1F / explosionSize, 0);
+					block.dropBlockAsItemWithChance(worldObj, blockpos, blockstate, 1F / explosionSize, 0);
 				}
 				
-				worldObj.setBlock(x, y, z, Blocks.air, 0, 3);
-				block.onBlockDestroyedByExplosion(worldObj, x, y, z, this);
+				worldObj.setBlockToAir(blockpos);
+				block.onBlockDestroyedByExplosion(worldObj, blockpos, this);
 			}
 		}
 	}
 	
 	public void doParticleExplosion(boolean smallparticles, boolean bigparticles)
 	{
-		worldObj.playSoundEffect(explosionX, explosionY, explosionZ, "random.explode", 4F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+		worldObj.playSoundEffect(getExplosionX(), getExplosionY(), getExplosionZ(), "random.explode", 4F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 		if (bigparticles)
 		{
-			worldObj.spawnParticle("hugeexplosion", explosionX, explosionY, explosionZ, 0.0D, 0.0D, 0.0D);
+			worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, getExplosionX(), getExplosionY(), getExplosionZ(), 0.0D, 0.0D, 0.0D);
 		}
 		if (!smallparticles) return;
 		
@@ -124,19 +137,19 @@ public class AdvancedExplosion extends Explosion
 			calculateBlockExplosion();
 		}
 		
-		for (int i = affectedBlockPositions.size() - 1; i >= 0; i--)
+		for (int i = getAffectedBlockPositions().size() - 1; i >= 0; i--)
 		{
-			ChunkPosition chunkposition = (ChunkPosition) affectedBlockPositions.get(i);
-			int j = chunkposition.chunkPosX;
-			int k = chunkposition.chunkPosY;
-			int l = chunkposition.chunkPosZ;
+			BlockPos blockpos = (BlockPos) getAffectedBlockPositions().get(i);
+			int j = blockpos.getX();
+			int k = blockpos.getY();
+			int l = blockpos.getZ();
 			//int i1 = worldObj.getBlockId(j, k, l);
 			double px = j + worldObj.rand.nextFloat();
 			double py = k + worldObj.rand.nextFloat();
 			double pz = l + worldObj.rand.nextFloat();
-			double dx = px - explosionX;
-			double dy = py - explosionY;
-			double dz = pz - explosionZ;
+			double dx = px - getExplosionX();
+			double dy = py - getExplosionY();
+			double dz = pz - getExplosionZ();
 			double distance = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
 			dx /= distance;
 			dy /= distance;
@@ -146,16 +159,31 @@ public class AdvancedExplosion extends Explosion
 			dx *= d7;
 			dy *= d7;
 			dz *= d7;
-			worldObj.spawnParticle("explode", (px + explosionX * 1.0D) / 2D, (py + explosionY * 1.0D) / 2D, (pz + explosionZ * 1.0D) / 2D, dx, dy, dz);
-			worldObj.spawnParticle("smoke", px, py, pz, dx, dy, dz);
+			worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, (px + getExplosionX() * 1.0D) / 2D, (py + getExplosionY() * 1.0D) / 2D, (pz + getExplosionZ() * 1.0D) / 2D, dx, dy, dz);
+			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px, py, pz, dx, dy, dz);
 		}
+	}
+
+	public double getExplosionX()
+	{
+		return getPosition().xCoord;
+	}
+
+	public double getExplosionY()
+	{
+		return getPosition().yCoord;
+	}
+
+	public double getExplosionZ()
+	{
+		return getPosition().zCoord;
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected void calculateBlockExplosion()
 	{
 		byte maxsize = 16;
-		Set<ChunkPosition> set = new HashSet<ChunkPosition>();
+		Set<BlockPos> set = new HashSet<BlockPos>();
 		int i;
 		int j;
 		int k;
@@ -179,25 +207,23 @@ public class AdvancedExplosion extends Explosion
 						ry /= rd;
 						rz /= rd;
 						float strength = explosionSize * (0.7F + worldObj.rand.nextFloat() * 0.6F);
-						dx = explosionX;
-						dy = explosionY;
-						dz = explosionZ;
+						dx = getExplosionX();
+						dy = getExplosionY();
+						dz = getExplosionZ();
 						
 						for (float f = 0.3F; strength > 0.0F; strength -= f * 0.75F)
 						{
-							int x = MathHelper.floor_double(dx);
-							int y = MathHelper.floor_double(dy);
-							int z = MathHelper.floor_double(dz);
-							Block block = worldObj.getBlock(x, y, z);
+							BlockPos blockpos = new BlockPos(MathHelper.floor_double(dx), MathHelper.floor_double(dy), MathHelper.floor_double(dz));
+							Block block = worldObj.getBlockState(blockpos).getBlock();
 							
 							if (block != null)
 							{
-								strength -= (block.getExplosionResistance(exploder, worldObj, x, y, z, explosionX, explosionY, explosionZ) + 0.3F) * f;
+								strength -= (block.getExplosionResistance(worldObj, blockpos, exploder, this) + 0.3F) * f;
 							}
 							
 							if (strength > 0.0F)
 							{
-								set.add(new ChunkPosition(x, y, z));
+								set.add(blockpos);
 							}
 							
 							dx += rx * f;
@@ -208,8 +234,8 @@ public class AdvancedExplosion extends Explosion
 				}
 			}
 		}
-		
-		affectedBlockPositions.addAll(set);
+
+		getAffectedBlockPositions().addAll(set);
 		blocksCalculated = true;
 	}
 	

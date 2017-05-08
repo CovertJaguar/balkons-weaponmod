@@ -1,27 +1,29 @@
 package ckathode.weaponmod.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import ckathode.weaponmod.PlayerWeaponData;
+import ckathode.weaponmod.entity.projectile.EntityFlail;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import ckathode.weaponmod.PlayerWeaponData;
-import ckathode.weaponmod.entity.projectile.EntityFlail;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemFlail extends WMItem
 {
-	public IIcon	iconIndexThrown;
-	private float	flailDamage;
-	
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation	modelLocationThrown = new ModelResourceLocation("weaponmod:flail-thrown", "inventory");
+	private float					flailDamage;
+	private Item.ToolMaterial material;
+
 	public ItemFlail(String id, Item.ToolMaterial toolmaterial)
 	{
 		super(id);
 		setMaxDamage(toolmaterial.getMaxUses());
 		flailDamage = 4F + toolmaterial.getDamageVsEntity() * 1F;
+		material = toolmaterial;
 	}
 	
 	@Override
@@ -100,6 +102,7 @@ public class ItemFlail extends WMItem
 		{
 			EntityFlail entity = new EntityFlail(world, entityplayer, itemstack);
 			PlayerWeaponData.setFlailEntityId(entityplayer, entity.getEntityId());
+			EntityFlail.materials.put(entity.getEntityId(), material);
 			world.spawnEntityInWorld(entity);
 		}
 		
@@ -133,23 +136,15 @@ public class ItemFlail extends WMItem
 	{
 		return flailDamage;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining)
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
 	{
 		if (PlayerWeaponData.isFlailThrown(player))
 		{
-			return iconIndexThrown;
+			return modelLocationThrown;
 		}
-		return super.getIcon(stack, renderPass, player, usingItem, useRemaining);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconregister)
-	{
-		super.registerIcons(iconregister);
-		iconIndexThrown = iconregister.registerIcon("weaponmod:flail-thrown");
+		return super.getModel(stack, player, useRemaining);
 	}
 }

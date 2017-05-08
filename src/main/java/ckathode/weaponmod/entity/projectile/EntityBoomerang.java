@@ -3,8 +3,11 @@ package ckathode.weaponmod.entity.projectile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -24,11 +27,11 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		super(world);
 	}
 	
-	public EntityBoomerang(World world, double x, double y, double z)
+	/*public EntityBoomerang(World world, double x, double y, double z)
 	{
 		this(world);
 		setPosition(x, y, z);
-	}
+	}*/
 	
 	public EntityBoomerang(World world, EntityLivingBase entityliving, ItemStack itemstack, float f)
 	{
@@ -41,7 +44,6 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		posY -= 0.1D;
 		posZ -= MathHelper.sin((rotationYaw / 180F) * 3.141593F) * 0.16F;
 		setPosition(posX, posY, posZ);
-		yOffset = 0.0F;
 		motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F);
 		motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F);
 		motionY = -MathHelper.sin((rotationPitch / 180F) * 3.141593F);
@@ -177,10 +179,11 @@ public class EntityBoomerang extends EntityMaterialProjectile
 	@Override
 	public void onGroundHit(MovingObjectPosition mop)
 	{
-		xTile = mop.blockX;
-		yTile = mop.blockY;
-		zTile = mop.blockZ;
-		inTile = worldObj.getBlock(xTile, yTile, zTile);
+		BlockPos blockpos = mop.getBlockPos();
+		xTile = blockpos.getX();
+		yTile = blockpos.getY();
+		zTile = blockpos.getZ();
+		inTile = worldObj.getBlockState(blockpos).getBlock();
 		motionX = (float) (mop.hitVec.xCoord - posX);
 		motionY = (float) (mop.hitVec.yCoord - posY);
 		motionZ = (float) (mop.hitVec.zCoord - posZ);
@@ -192,7 +195,7 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		motionX *= -rand.nextFloat() * 0.5F;
 		motionZ *= -rand.nextFloat() * 0.5F;
 		motionY = rand.nextFloat() * 0.1F;
-		if (mop.sideHit == 1)
+		if (mop.sideHit == EnumFacing.UP)
 		{
 			inGround = true;
 		} else
@@ -205,7 +208,7 @@ public class EntityBoomerang extends EntityMaterialProjectile
 		
 		if (inTile != null)
 		{
-			inTile.onEntityCollidedWithBlock(worldObj, xTile, yTile, zTile, this);
+			inTile.onEntityCollidedWithBlock(worldObj, blockpos, this);
 		}
 	}
 	

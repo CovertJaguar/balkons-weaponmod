@@ -2,6 +2,7 @@ package ckathode.weaponmod.entity.projectile;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -16,11 +17,11 @@ public class EntitySpear extends EntityMaterialProjectile
 		super(world);
 	}
 	
-	public EntitySpear(World world, double d, double d1, double d2)
+	/*public EntitySpear(World world, double d, double d1, double d2)
 	{
 		this(world);
 		setPosition(d, d1, d2);
-	}
+	}*/
 	
 	public EntitySpear(World world, EntityLivingBase entityliving, ItemStack itemstack)
 	{
@@ -33,7 +34,6 @@ public class EntitySpear extends EntityMaterialProjectile
 		posY -= 0.1D;
 		posZ -= MathHelper.sin((rotationYaw / 180F) * 3.141593F) * 0.16F;
 		setPosition(posX, posY, posZ);
-		yOffset = 0.0F;
 		motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F);
 		motionY = -MathHelper.sin((rotationPitch / 180F) * 3.141593F);
 		motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F);
