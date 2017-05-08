@@ -1,18 +1,15 @@
 package ckathode.weaponmod.render;
 
+import ckathode.weaponmod.WeaponModResources;
+import ckathode.weaponmod.entity.projectile.EntityBlunderShot;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import ckathode.weaponmod.WeaponModResources;
-import ckathode.weaponmod.entity.projectile.EntityBlunderShot;
 
 public class RenderBlunderShot extends Render
 {
@@ -27,7 +24,7 @@ public class RenderBlunderShot extends Render
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d, (float) d1, (float) d2);
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer renderer = tessellator.getWorldRenderer();
+		VertexBuffer renderer = tessellator.getBuffer();
 		float f2 = 0.0F;
 		float f3 = 5F / 16F;
 		float f10 = 0.05625F;

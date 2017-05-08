@@ -3,11 +3,11 @@ package ckathode.weaponmod.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.RayTraceResult.MovingObjectType;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ckathode.weaponmod.entity.EntityDummy;
 
@@ -29,7 +29,7 @@ public class ItemDummy extends WMItem
 		double d = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * f;
 		double d1 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * f + 1.62D) - entityplayer.getYOffset();
 		double d2 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * f;
-		Vec3 vec3d = new Vec3(d, d1, d2);
+		Vec3d vec3d = new Vec3d(d, d1, d2);
 		float f3 = MathHelper.cos(-f2 * 0.01745329F - 3.141593F);
 		float f4 = MathHelper.sin(-f2 * 0.01745329F - 3.141593F);
 		float f5 = -MathHelper.cos(-f1 * 0.01745329F);
@@ -38,13 +38,13 @@ public class ItemDummy extends WMItem
 		float f8 = f6;
 		float f9 = f3 * f5;
 		double d3 = 5D;
-		Vec3 vec3d1 = vec3d.addVector(f7 * d3, f8 * d3, f9 * d3);
-		MovingObjectPosition movingobjectposition = world.rayTraceBlocks(vec3d, vec3d1, true);
-		if (movingobjectposition != null)
+		Vec3d vec3d1 = vec3d.addVector(f7 * d3, f8 * d3, f9 * d3);
+		RayTraceResult RayTraceResult = world.rayTraceBlocks(vec3d, vec3d1, true);
+		if (RayTraceResult != null)
 		{
-			if (movingobjectposition.typeOfHit == MovingObjectType.BLOCK)
+			if (RayTraceResult.typeOfHit == MovingObjectType.BLOCK)
 			{
-				BlockPos pos = movingobjectposition.getBlockPos();
+				BlockPos pos = RayTraceResult.getBlockPos();
 				int i = pos.getY();
 				if (world.getBlockState(pos).getBlock() == Blocks.snow)
 				{

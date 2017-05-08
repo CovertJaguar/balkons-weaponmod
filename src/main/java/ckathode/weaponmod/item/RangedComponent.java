@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
@@ -274,7 +274,7 @@ public abstract class RangedComponent extends AbstractWeaponComponent
 	
 	public boolean hasAmmoAndConsume(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
-		return entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemstack) > 0 || entityplayer.inventory.consumeInventoryItem(getAmmoItem());
+		return entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.ity.effectId, itemstack) > 0 || entityplayer.inventory.consumeInventoryItem(getAmmoItem());
 	}
 	
 	public boolean hasAmmo(ItemStack itemstack, World world, EntityPlayer entityplayer)

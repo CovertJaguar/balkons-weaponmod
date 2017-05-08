@@ -1,15 +1,15 @@
 package ckathode.weaponmod;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.client.event.FOVUpdateEvent;
 import ckathode.weaponmod.entity.EntityCannon;
 import ckathode.weaponmod.item.ExtendedReachHelper;
 import ckathode.weaponmod.item.IExtendedReachItem;
 import ckathode.weaponmod.item.IItemWeapon;
 import ckathode.weaponmod.item.RangedComponent;
 import ckathode.weaponmod.network.MsgCannonFire;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -48,7 +48,7 @@ public class WMClientEventHandler
 					if (ieri != null)
 					{
 						float reach = ieri.getExtendedReach(e.player.worldObj, e.player, itemstack);
-						MovingObjectPosition mov = ExtendedReachHelper.getMouseOver(0, reach);
+						RayTraceResult mov = ExtendedReachHelper.getMouseOver(0, reach);
 
 						if (mov != null && mov.entityHit != null && mov.entityHit != e.player && mov.entityHit.hurtResistantTime == 0)
 						{

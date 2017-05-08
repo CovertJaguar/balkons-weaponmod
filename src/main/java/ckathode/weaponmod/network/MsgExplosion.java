@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import ckathode.weaponmod.AdvancedExplosion;
 import net.minecraftforge.fml.client.FMLClientHandler;

@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,9 +22,9 @@ public abstract class ExtendedReachHelper
 	 * 
 	 * @return
 	 */
-	public static MovingObjectPosition getMouseOver(float frame, float dist)
+	public static RayTraceResult getMouseOver(float frame, float dist)
 	{
-		MovingObjectPosition mop = null;
+		RayTraceResult mop = null;
 		if (mc.getRenderViewEntity() != null)
 		{
 			if (mc.theWorld != null)
@@ -32,15 +32,15 @@ public abstract class ExtendedReachHelper
 				double var2 = dist;
 				mop = mc.getRenderViewEntity().rayTrace(var2, frame);
 				double calcdist = var2;
-				Vec3 pos = mc.getRenderViewEntity().getPositionEyes(frame);
+				Vec3d pos = mc.getRenderViewEntity().getPositionEyes(frame);
 				var2 = calcdist;
 				if (mop != null)
 				{
 					calcdist = mop.hitVec.distanceTo(pos);
 				}
 				
-				Vec3 lookvec = mc.getRenderViewEntity().getLook(frame);
-				Vec3 var8 = pos.addVector(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2);
+				Vec3d lookvec = mc.getRenderViewEntity().getLook(frame);
+				Vec3d var8 = pos.addVector(lookvec.xCoord * var2, lookvec.yCoord * var2, lookvec.zCoord * var2);
 				Entity pointedEntity = null;
 				float var9 = 1.0F;
 				@SuppressWarnings("unchecked")
@@ -53,7 +53,7 @@ public abstract class ExtendedReachHelper
 					{
 						float bordersize = entity.getCollisionBorderSize();
 						AxisAlignedBB aabb = entity.getEntityBoundingBox().expand(bordersize, bordersize, bordersize);
-						MovingObjectPosition mop0 = aabb.calculateIntercept(pos, var8);
+						RayTraceResult mop0 = aabb.calculateIntercept(pos, var8);
 						
 						if (aabb.isVecInside(pos))
 						{
@@ -77,7 +77,7 @@ public abstract class ExtendedReachHelper
 				
 				if (pointedEntity != null && (d < calcdist || mop == null))
 				{
-					mop = new MovingObjectPosition(pointedEntity);
+					mop = new RayTraceResult(pointedEntity);
 				}
 			}
 		}

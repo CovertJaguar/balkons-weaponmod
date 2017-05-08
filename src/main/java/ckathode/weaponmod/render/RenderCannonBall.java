@@ -1,7 +1,7 @@
 package ckathode.weaponmod.render;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -24,7 +24,7 @@ public class RenderCannonBall extends Render
 	public void renderCannonBall(EntityCannonBall entitycannonball, double d, double d1, double d2, float f, float f1)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer renderer = tessellator.getWorldRenderer();
+		VertexBuffer renderer = tessellator.getBuffer();
 		GL11.glPushMatrix();
 		bindEntityTexture(entitycannonball);
 		GL11.glTranslatef((float) d, (float) d1, (float) d2);

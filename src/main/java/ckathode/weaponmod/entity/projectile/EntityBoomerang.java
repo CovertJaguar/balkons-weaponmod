@@ -5,11 +5,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import ckathode.weaponmod.WeaponDamageSource;
 import ckathode.weaponmod.item.IItemWeapon;
@@ -177,7 +177,7 @@ public class EntityBoomerang extends EntityMaterialProjectile
 	}
 	
 	@Override
-	public void onGroundHit(MovingObjectPosition mop)
+	public void onGroundHit(RayTraceResult mop)
 	{
 		BlockPos blockpos = mop.getBlockPos();
 		xTile = blockpos.getX();

@@ -14,12 +14,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
 import net.minecraftforge.fml.common.registry.IThrowableEntity;
@@ -161,7 +161,7 @@ public abstract class EntityProjectile extends EntityArrow implements IThrowable
 		{
 			i.setBlockBoundsBasedOnState(worldObj, pos);
 			AxisAlignedBB axisalignedbb = i.getCollisionBoundingBox(worldObj, pos, blockstate);
-			if (axisalignedbb != null && axisalignedbb.isVecInside(new Vec3(posX, posY, posZ)))
+			if (axisalignedbb != null && axisalignedbb.isVecInside(new Vec3d(posX, posY, posZ)))
 			{
 				inGround = true;
 			}
@@ -199,14 +199,14 @@ public abstract class EntityProjectile extends EntityArrow implements IThrowable
 		
 		ticksInAir++;
 		
-		Vec3 vec3d = new Vec3(posX, posY, posZ);
-		Vec3 vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
-		MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1, false, true, false);
-		vec3d = new Vec3(posX, posY, posZ);
-		vec3d1 = new Vec3(posX + motionX, posY + motionY, posZ + motionZ);
-		if (movingobjectposition != null)
+		Vec3d vec3d = new Vec3d(posX, posY, posZ);
+		Vec3d vec3d1 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
+		RayTraceResult RayTraceResult = worldObj.rayTraceBlocks(vec3d, vec3d1, false, true, false);
+		vec3d = new Vec3d(posX, posY, posZ);
+		vec3d1 = new Vec3d(posX + motionX, posY + motionY, posZ + motionZ);
+		if (RayTraceResult != null)
 		{
-			vec3d1 = new Vec3(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+			vec3d1 = new Vec3d(RayTraceResult.hitVec.xCoord, RayTraceResult.hitVec.yCoord, RayTraceResult.hitVec.zCoord);
 		}
 		
 		Entity entity = null;
@@ -222,12 +222,12 @@ public abstract class EntityProjectile extends EntityArrow implements IThrowable
 			}
 			float f4 = 0.3F;
 			AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand(f4, f4, f4);
-			MovingObjectPosition movingobjectposition1 = axisalignedbb1.calculateIntercept(vec3d, vec3d1);
-			if (movingobjectposition1 == null)
+			RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec3d, vec3d1);
+			if (RayTraceResult1 == null)
 			{
 				continue;
 			}
-			double d1 = vec3d.distanceTo(movingobjectposition1.hitVec);
+			double d1 = vec3d.distanceTo(RayTraceResult1.hitVec);
 			if (d1 < d || d == 0.0D)
 			{
 				entity = entity1;
@@ -237,17 +237,17 @@ public abstract class EntityProjectile extends EntityArrow implements IThrowable
 		
 		if (entity != null)
 		{
-			movingobjectposition = new MovingObjectPosition(entity);
+			RayTraceResult = new RayTraceResult(entity);
 		}
 		
-		if (movingobjectposition != null)
+		if (RayTraceResult != null)
 		{
-			if (movingobjectposition.entityHit != null)
+			if (RayTraceResult.entityHit != null)
 			{
-				onEntityHit(movingobjectposition.entityHit);
+				onEntityHit(RayTraceResult.entityHit);
 			} else
 			{
-				onGroundHit(movingobjectposition);
+				onGroundHit(RayTraceResult);
 			}
 		}
 		
@@ -335,7 +335,7 @@ public abstract class EntityProjectile extends EntityArrow implements IThrowable
 		}
 	}
 	
-	public void onGroundHit(MovingObjectPosition mop)
+	public void onGroundHit(RayTraceResult mop)
 	{
 		BlockPos blockpos = mop.getBlockPos();
 		xTile = blockpos.getX();

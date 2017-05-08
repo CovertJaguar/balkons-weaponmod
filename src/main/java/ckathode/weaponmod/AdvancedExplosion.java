@@ -1,22 +1,23 @@
 package ckathode.weaponmod;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.World;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
 
 public class AdvancedExplosion extends Explosion
 {
@@ -42,17 +43,17 @@ public class AdvancedExplosion extends Explosion
 	@SuppressWarnings("unchecked")
 	public void setAffectedBlockPositions(List<BlockPos> list)
 	{
-		func_180342_d();
+		clearAffectedBlockPositions();
 		//getAffectedBlockPositions().addAll(list);
 		getAffectedBlockPositions().addAll(list);
 		blocksCalculated = true;
 	}
-	
+
 	public void doEntityExplosion()
 	{
-		doEntityExplosion(DamageSource.setExplosionSource(this));
+		doEntityExplosion(DamageSource.causeExplosionDamage(this));
 	}
-	
+
 	public void doEntityExplosion(DamageSource damagesource)
 	{
 		float size = explosionSize * 2F;
@@ -64,24 +65,24 @@ public class AdvancedExplosion extends Explosion
 		int k1 = MathHelper.floor_double(getExplosionZ() + size + 1.0D);
 		@SuppressWarnings("unchecked")
 		List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(exploder, new AxisAlignedBB(i0, j0, k0, i1, j1, k1));
-		Vec3 vec31 = new Vec3(getExplosionX(), getExplosionY(), getExplosionZ());
-		
+		Vec3d vec31 = new Vec3d(getExplosionX(), getExplosionY(), getExplosionZ());
+
 		double dx;
 		double dy;
 		double dz;
-		
+
 		for (int i = 0; i < list.size(); i++)
 		{
 			Entity entity = list.get(i);
 			double dr = entity.getDistance(getExplosionX(), getExplosionY(), getExplosionZ()) / size;
-			
+
 			if (dr <= 1.0D)
 			{
 				dx = entity.posX - getExplosionX();
 				dy = entity.posY - getExplosionY();
 				dz = entity.posZ - getExplosionZ();
 				double d = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
-				
+
 				if (d != 0D)
 				{
 					dx /= d;
@@ -98,7 +99,7 @@ public class AdvancedExplosion extends Explosion
 			}
 		}
 	}
-	
+
 	public void doBlockExplosion()
 	{
 		if (!blocksCalculated)
@@ -116,27 +117,27 @@ public class AdvancedExplosion extends Explosion
 				{
 					block.dropBlockAsItemWithChance(worldObj, blockpos, blockstate, 1F / explosionSize, 0);
 				}
-				
+
 				worldObj.setBlockToAir(blockpos);
 				block.onBlockDestroyedByExplosion(worldObj, blockpos, this);
 			}
 		}
 	}
-	
+
 	public void doParticleExplosion(boolean smallparticles, boolean bigparticles)
 	{
-		worldObj.playSoundEffect(getExplosionX(), getExplosionY(), getExplosionZ(), "random.explode", 4F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+		worldObj.playSound(null, getExplosionX(), getExplosionY(), getExplosionZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 4F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 		if (bigparticles)
 		{
 			worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, getExplosionX(), getExplosionY(), getExplosionZ(), 0.0D, 0.0D, 0.0D);
 		}
 		if (!smallparticles) return;
-		
+
 		if (!blocksCalculated)
 		{
 			calculateBlockExplosion();
 		}
-		
+
 		for (int i = getAffectedBlockPositions().size() - 1; i >= 0; i--)
 		{
 			BlockPos blockpos = (BlockPos) getAffectedBlockPositions().get(i);
@@ -178,7 +179,7 @@ public class AdvancedExplosion extends Explosion
 	{
 		return getPosition().zCoord;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void calculateBlockExplosion()
 	{
@@ -190,7 +191,7 @@ public class AdvancedExplosion extends Explosion
 		double dx;
 		double dy;
 		double dz;
-		
+
 		for (i = 0; i < maxsize; i++)
 		{
 			for (j = 0; j < maxsize; j++)
@@ -210,22 +211,22 @@ public class AdvancedExplosion extends Explosion
 						dx = getExplosionX();
 						dy = getExplosionY();
 						dz = getExplosionZ();
-						
+
 						for (float f = 0.3F; strength > 0.0F; strength -= f * 0.75F)
 						{
 							BlockPos blockpos = new BlockPos(MathHelper.floor_double(dx), MathHelper.floor_double(dy), MathHelper.floor_double(dz));
 							Block block = worldObj.getBlockState(blockpos).getBlock();
-							
+
 							if (block != null)
 							{
 								strength -= (block.getExplosionResistance(worldObj, blockpos, exploder, this) + 0.3F) * f;
 							}
-							
+
 							if (strength > 0.0F)
 							{
 								set.add(blockpos);
 							}
-							
+
 							dx += rx * f;
 							dy += ry * f;
 							dz += rz * f;
@@ -238,6 +239,6 @@ public class AdvancedExplosion extends Explosion
 		getAffectedBlockPositions().addAll(set);
 		blocksCalculated = true;
 	}
-	
+
 	protected static final Random	rand	= new Random();
 }

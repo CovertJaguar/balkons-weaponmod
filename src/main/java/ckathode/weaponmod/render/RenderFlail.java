@@ -1,15 +1,15 @@
 package ckathode.weaponmod.render;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import org.lwjgl.opengl.GL11;
 
@@ -31,7 +31,7 @@ public class RenderFlail extends Render
 		GL11.glRotatef((entityarrow.prevRotationYaw + (entityarrow.rotationYaw - entityarrow.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(entityarrow.prevRotationPitch + (entityarrow.rotationPitch - entityarrow.prevRotationPitch) * f1, 0.0F, 0.0F, 1.0F);
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer renderer = tessellator.getWorldRenderer();
+		VertexBuffer renderer = tessellator.getBuffer();
 		
 		// ===============FLAIL BALL===============
 
@@ -124,7 +124,7 @@ public class RenderFlail extends Render
 		{
 			float f22 = ((EntityLivingBase) entityarrow.shootingEntity).getSwingProgress(f1); // 11
 			float f23 = MathHelper.sin(MathHelper.sqrt_float(f22) * 3.141593F); // 12
-			Vec3 vec3d = new Vec3(-0.5D, 0.03D, 0.8D);
+			Vec3d vec3d = new Vec3d(-0.5D, 0.03D, 0.8D);
 			vec3d.rotatePitch((-(entityarrow.shootingEntity.prevRotationPitch + (entityarrow.shootingEntity.rotationPitch - entityarrow.shootingEntity.prevRotationPitch) * f1) * 3.141593F) / 180F);
 			vec3d.rotateYaw((-(entityarrow.shootingEntity.prevRotationYaw + (entityarrow.shootingEntity.rotationYaw - entityarrow.shootingEntity.prevRotationYaw) * f1) * 3.141593F) / 180F);
 			vec3d.rotateYaw(f23 * 0.5F);

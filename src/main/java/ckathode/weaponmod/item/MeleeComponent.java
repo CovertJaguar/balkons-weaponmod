@@ -1,5 +1,8 @@
 package ckathode.weaponmod.item;
 
+import ckathode.weaponmod.PhysHelper;
+import ckathode.weaponmod.WeaponModAttributes;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -12,13 +15,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import ckathode.weaponmod.PhysHelper;
-import ckathode.weaponmod.WeaponModAttributes;
-
-import com.google.common.collect.Multimap;
-
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,7 +73,7 @@ public class MeleeComponent extends AbstractWeaponComponent
 			return meleeSpecs.blockDamage * 10F;
 		}
 		Material material = block.getMaterial();
-		return material != Material.plants && material != Material.vine && material != Material.coral && material != Material.leaves && material != Material.gourd ? 1.0F : meleeSpecs.blockDamage;
+		return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD ? 1.0F : meleeSpecs.blockDamage;
 	}
 	
 	@Override

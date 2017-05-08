@@ -4,11 +4,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import ckathode.weaponmod.BalkonsWeaponMod;
 import ckathode.weaponmod.PhysHelper;
@@ -99,7 +99,7 @@ public class EntityCannonBall extends EntityProjectile
 	}
 	
 	@Override
-	public void onGroundHit(MovingObjectPosition mop)
+	public void onGroundHit(RayTraceResult mop)
 	{
 		BlockPos blockpos = mop.getBlockPos();
 		xTile = blockpos.getX();
